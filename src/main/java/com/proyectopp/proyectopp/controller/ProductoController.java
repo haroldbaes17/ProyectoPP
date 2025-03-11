@@ -2,7 +2,7 @@ package com.proyectopp.proyectopp.controller;
 
 import com.proyectopp.proyectopp.dto.ProductoDto;
 import com.proyectopp.proyectopp.model.Producto;
-import com.proyectopp.proyectopp.repository.ProductsRepository;
+import com.proyectopp.proyectopp.repository.ProductoRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +25,7 @@ import java.util.List;
 public class ProductoController {
 
     @Autowired
-    private ProductsRepository repository;
+    private ProductoRepository repository;
 
     @GetMapping({"", "/"})
     public String showProductList(Model model) {

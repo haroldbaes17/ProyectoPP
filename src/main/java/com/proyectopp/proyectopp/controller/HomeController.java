@@ -11,8 +11,8 @@ public class HomeController {
         return "index";
     }
 
-//    @GetMapping("/productos")
-//    public String productos() {
-//        return "productos";
-//    }
+    @GetMapping("/contacto")
+    public String contacto() {
+        return "contacto";
+    }
 }

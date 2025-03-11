@@ -12,7 +12,7 @@ public class Usuario {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "nombre", length = 20, nullable = false)
+    @Column(name = "nombre", length = 30, nullable = false)
     private String nombre;
 
     @Column(name = "apellidos", length = 45, nullable = false)
@@ -22,7 +22,7 @@ public class Usuario {
     private String cedula;
 
     @Column(name = "correo_electronico", length = 60, nullable = false, unique = true)
-    private String correo_electronico;
+    private String correoElectronico;
 
     @Column(name = "password", length = 60, nullable = false)
     private String password;
@@ -38,4 +38,84 @@ public class Usuario {
 
     @Column(name = "token", length = 64, nullable = false)
     private String token;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
+    }
+
+    public String getCedula() {
+        return cedula;
+    }
+
+    public void setCedula(String cedula) {
+        this.cedula = cedula;
+    }
+
+    public String getCorreoElectronico() {
+        return correoElectronico;
+    }
+
+    public void setCorreoElectronico(String correo_electronico) {
+        this.correoElectronico = correo_electronico;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public boolean isEs_admin() {
+        return es_admin;
+    }
+
+    public void setEs_admin(boolean es_admin) {
+        this.es_admin = es_admin;
+    }
+
+    public boolean isConfirmado() {
+        return confirmado;
+    }
+
+    public void setConfirmado(boolean confirmado) {
+        this.confirmado = confirmado;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }
