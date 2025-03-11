@@ -1,63 +1,52 @@
-package com.proyectopp.proyectopp.model;
+package com.proyectopp.proyectopp.dto;
 
-import jakarta.persistence.*;
-import lombok.Data;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
-@Entity
-@Data
-@Table(name = "productos")
-public class Producto {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+public class ProductoDto {
 
-    @Column(name = "nombre", length = 60, nullable = false)
+    @NotEmpty(message = "Este campo es requerido*")
     private String nombre;
 
-    @Column(name = "equipo", length = 60)
+    @NotEmpty(message = "Este campo es requerido*")
     private String equipo;
 
-    @Column(name = "precio", precision = 10, scale = 2, nullable = false)
+    @NotNull(message = "Este campo es requerido*")
+    @Min(1)
     private BigDecimal precio;
 
-    @Column(name = "imagen", length = 200, nullable = false)
-    private String imagen;
+    private MultipartFile imagen;
 
-    @Column(name = "stock_total", nullable = false)
+    @Min(1)
     private int stock_total;
 
-    @Column(name = "tipo_equipacion", length = 15, nullable = false)
+    @NotEmpty(message = "Este campo es requerido*")
     private String tipo_equipacion;
 
-    @Column(name = "liga", length = 60, nullable = false)
+    @NotEmpty(message = "Este campo es requerido*")
     private String liga;
 
-    @Column(name = "pais", length = 45, nullable = false)
+    @NotEmpty(message = "Este campo es requerido*")
     private String pais;
 
-    @Column(name = "temporada", length = 15, nullable = false)
+    @NotEmpty(message = "Este campo es requerido*")
     private String temporada;
 
-    @Column(name = "edicion_especial", nullable = false)
-    private boolean edicion_especial;
+    @NotNull(message = "Este campo es requerido*")
+    private Boolean edicion_especial;
 
-    @Column(name = "es_retro", nullable = false)
-    private boolean es_retro;
+    @NotNull(message = "Este campo es requerido*")
+    private Boolean es_retro;
 
-    @Column(name = "descripcion", columnDefinition = "TEXT", nullable = false)
+    @Size(min = 10, max = 2000, message = "La descripción debe tener entre 10 y 2000 caracteres")
     private String descripcion;
 
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
+    // Getters y Setters
     public String getNombre() {
         return nombre;
     }
@@ -82,11 +71,11 @@ public class Producto {
         this.precio = precio;
     }
 
-    public String getImagen() {
+    public MultipartFile getImagen() {
         return imagen;
     }
 
-    public void setImagen(String imagen) {
+    public void setImagen(MultipartFile imagen) {
         this.imagen = imagen;
     }
 
@@ -130,19 +119,19 @@ public class Producto {
         this.temporada = temporada;
     }
 
-    public boolean isEdicion_especial() {
+    public @NotNull(message = "Este campo es requerido") Boolean getEdicion_especial() {
         return edicion_especial;
     }
 
-    public void setEdicion_especial(boolean edicion_especial) {
+    public void setEdicion_especial(@NotNull(message = "Este campo es requerido") Boolean edicion_especial) {
         this.edicion_especial = edicion_especial;
     }
 
-    public boolean isEs_retro() {
+    public @NotNull(message = "Este campo es requerido") Boolean getEs_retro() {
         return es_retro;
     }
 
-    public void setEs_retro(boolean es_retro) {
+    public void setEs_retro(@NotNull(message = "Este campo es requerido") Boolean es_retro) {
         this.es_retro = es_retro;
     }
 
