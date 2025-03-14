@@ -28,7 +28,7 @@ public class Detalle_factura {
     private int cantidad;
 
     @Column(name = "precio_unitario", precision = 10, scale = 2, nullable = false)
-    private BigDecimal precio_unitario;
+    private BigDecimal precioUnitario;
 
     @Column(name = "subtotal", precision = 10, scale = 2, nullable = false)
     private BigDecimal subtotal;

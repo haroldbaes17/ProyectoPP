@@ -23,10 +23,10 @@ public class ProductoDto {
     private MultipartFile imagen;
 
     @Min(1)
-    private int stock_total;
+    private int stockTotal;
 
     @NotEmpty(message = "Este campo es requerido*")
-    private String tipo_equipacion;
+    private String tipoEquipacion;
 
     @NotEmpty(message = "Este campo es requerido*")
     private String liga;
@@ -38,10 +38,10 @@ public class ProductoDto {
     private String temporada;
 
     @NotNull(message = "Este campo es requerido*")
-    private Boolean edicion_especial;
+    private Boolean edicionEspecial;
 
     @NotNull(message = "Este campo es requerido*")
-    private Boolean es_retro;
+    private Boolean esRetro;
 
     @Size(min = 10, max = 2000, message = "La descripción debe tener entre 10 y 2000 caracteres")
     private String descripcion;
@@ -79,20 +79,20 @@ public class ProductoDto {
         this.imagen = imagen;
     }
 
-    public int getStock_total() {
-        return stock_total;
+    public int getStockTotal() {
+        return stockTotal;
     }
 
-    public void setStock_total(int stock_total) {
-        this.stock_total = stock_total;
+    public void setStockTotal(int stockTotal) {
+        this.stockTotal = stockTotal;
     }
 
-    public String getTipo_equipacion() {
-        return tipo_equipacion;
+    public String getTipoEquipacion() {
+        return tipoEquipacion;
     }
 
-    public void setTipo_equipacion(String tipo_equipacion) {
-        this.tipo_equipacion = tipo_equipacion;
+    public void setTipoEquipacion(String tipoEquipacion) {
+        this.tipoEquipacion = tipoEquipacion;
     }
 
     public String getLiga() {
@@ -119,20 +119,20 @@ public class ProductoDto {
         this.temporada = temporada;
     }
 
-    public @NotNull(message = "Este campo es requerido") Boolean getEdicion_especial() {
-        return edicion_especial;
+    public @NotNull(message = "Este campo es requerido") Boolean getEdicionEspecial() {
+        return edicionEspecial;
     }
 
-    public void setEdicion_especial(@NotNull(message = "Este campo es requerido") Boolean edicion_especial) {
-        this.edicion_especial = edicion_especial;
+    public void setEdicionEspecial(@NotNull(message = "Este campo es requerido") Boolean edicionEspecial) {
+        this.edicionEspecial = edicionEspecial;
     }
 
-    public @NotNull(message = "Este campo es requerido") Boolean getEs_retro() {
-        return es_retro;
+    public @NotNull(message = "Este campo es requerido") Boolean getEsRetro() {
+        return esRetro;
     }
 
-    public void setEs_retro(@NotNull(message = "Este campo es requerido") Boolean es_retro) {
-        this.es_retro = es_retro;
+    public void setEsRetro(@NotNull(message = "Este campo es requerido") Boolean esRetro) {
+        this.esRetro = esRetro;
     }
 
     public String getDescripcion() {
@@ -141,5 +141,23 @@ public class ProductoDto {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductoDto{" +
+                "nombre='" + nombre + '\'' +
+                ", equipo='" + equipo + '\'' +
+                ", precio=" + precio +
+                ", imagen=" + imagen +
+                ", stockTotal=" + stockTotal +
+                ", tipoEquipacion='" + tipoEquipacion + '\'' +
+                ", liga='" + liga + '\'' +
+                ", pais='" + pais + '\'' +
+                ", temporada='" + temporada + '\'' +
+                ", edicionEspecial=" + edicionEspecial +
+                ", esRetro=" + esRetro +
+                ", descripcion='" + descripcion + '\'' +
+                '}';
     }
 }

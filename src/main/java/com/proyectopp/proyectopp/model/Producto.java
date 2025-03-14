@@ -26,10 +26,10 @@ public class Producto {
     private String imagen;
 
     @Column(name = "stock_total", nullable = false)
-    private int stock_total;
+    private int stockTotal;
 
     @Column(name = "tipo_equipacion", length = 15, nullable = false)
-    private String tipo_equipacion;
+    private String tipoEquipacion;
 
     @Column(name = "liga", length = 60, nullable = false)
     private String liga;
@@ -41,10 +41,10 @@ public class Producto {
     private String temporada;
 
     @Column(name = "edicion_especial", nullable = false)
-    private boolean edicion_especial;
+    private boolean edicionEspecial;
 
     @Column(name = "es_retro", nullable = false)
-    private boolean es_retro;
+    private boolean esRetro;
 
     @Column(name = "descripcion", columnDefinition = "TEXT", nullable = false)
     private String descripcion;
@@ -90,20 +90,20 @@ public class Producto {
         this.imagen = imagen;
     }
 
-    public int getStock_total() {
-        return stock_total;
+    public int getStockTotal() {
+        return stockTotal;
     }
 
-    public void setStock_total(int stock_total) {
-        this.stock_total = stock_total;
+    public void setStockTotal(int stockTotal) {
+        this.stockTotal = stockTotal;
     }
 
-    public String getTipo_equipacion() {
-        return tipo_equipacion;
+    public String getTipoEquipacion() {
+        return tipoEquipacion;
     }
 
-    public void setTipo_equipacion(String tipo_equipacion) {
-        this.tipo_equipacion = tipo_equipacion;
+    public void setTipoEquipacion(String tipoEquipacion) {
+        this.tipoEquipacion = tipoEquipacion;
     }
 
     public String getLiga() {
@@ -130,20 +130,20 @@ public class Producto {
         this.temporada = temporada;
     }
 
-    public boolean isEdicion_especial() {
-        return edicion_especial;
+    public boolean isEdicionEspecial() {
+        return edicionEspecial;
     }
 
-    public void setEdicion_especial(boolean edicion_especial) {
-        this.edicion_especial = edicion_especial;
+    public void setEdicionEspecial(boolean edicionEspecial) {
+        this.edicionEspecial = edicionEspecial;
     }
 
-    public boolean isEs_retro() {
-        return es_retro;
+    public boolean isEsRetro() {
+        return esRetro;
     }
 
-    public void setEs_retro(boolean es_retro) {
-        this.es_retro = es_retro;
+    public void setEsRetro(boolean esRetro) {
+        this.esRetro = esRetro;
     }
 
     public String getDescripcion() {
@@ -152,5 +152,24 @@ public class Producto {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    @Override
+    public String toString() {
+        return "Producto{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", equipo='" + equipo + '\'' +
+                ", precio=" + precio +
+                ", imagen='" + imagen + '\'' +
+                ", stockTotal=" + stockTotal +
+                ", tipoEquipacion='" + tipoEquipacion + '\'' +
+                ", liga='" + liga + '\'' +
+                ", pais='" + pais + '\'' +
+                ", temporada='" + temporada + '\'' +
+                ", edicionEspecial=" + edicionEspecial +
+                ", esRetro=" + esRetro +
+                ", descripcion='" + descripcion + '\'' +
+                '}';
     }
 }

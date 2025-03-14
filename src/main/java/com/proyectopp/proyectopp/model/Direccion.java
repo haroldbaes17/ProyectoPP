@@ -25,5 +25,5 @@ public class Direccion {
     private String distrito;
 
     @Column(name = "direccion_exacta", columnDefinition = "TEXT", nullable = false)
-    private String direccion_exacta;
+    private String direccionExacta;
 }
