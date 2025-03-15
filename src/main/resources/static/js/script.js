@@ -6,6 +6,7 @@ function iniciarApp() {
     selectPaises();
     mensajesExito();
     eliminarProductoConfirmacion()
+    formatearPrecio()
 }
 
 function selectPaises() {
@@ -64,4 +65,15 @@ function eliminarProductoConfirmacion() {
             });
         });
     });
+}
+
+function formatearPrecio() {
+    let precioElement = document.getElementById("precio");
+    let precioTexto = precioElement.innerText.replace("₡ ", ""); // Quitar símbolo ₡
+    let precioNumero = parseFloat(precioTexto).toFixed(2); // Asegurar dos decimales
+
+    // Formatear el número con punto como separador de miles y coma para decimales
+    precioNumero = precioNumero.replace(/\B(?=(\d{3})+(?!\d))/g, " ").replace(" ", ",");
+
+    precioElement.innerText = `₡ ${precioNumero}`;
 }

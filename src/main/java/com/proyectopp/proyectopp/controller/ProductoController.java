@@ -136,7 +136,7 @@ public class ProductoController {
         try {
             Producto producto = repository.findById(id).get();
             model.addAttribute("producto", producto);
-            LOGGER.info("Producto Buscado: {}", productoDto);
+//            LOGGER.info("Producto Buscado: {}", productoDto);
 
             if (result.hasErrors()) {
                 return "/admin/productos/edit";

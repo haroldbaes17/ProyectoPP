@@ -22,7 +22,7 @@
 <body>
 
   <!-- Navigation -->
-  <div th:include="admin/template_admin.html::header"></div>
+  <div th:insert="~{admin/template_admin.html::header}"></div>
 
 <!-- Page Content -->
 <div class="container">
@@ -173,14 +173,12 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-sm-2">
-        <button type="submit" class="btn btn-success mb-3">
+    <div class="row mb-3">
+      <div class="col-12 d-flex">
+        <button type="submit" class="btn btn-success me-2 mr-3 ml-3">
           <span class="glyphicon glyphicon-saved"></span> Guardar
         </button>
-      </div>
-      <div class="col-sm-2">
-        <a th:href="@{/admin/productos}" class="btn btn-danger mb-3">
+        <a th:href="@{/admin/productos}" class="btn btn-danger">
           <span class="glyphicon glyphicon-saved"></span> Cancelar
         </a>
       </div>
@@ -192,7 +190,7 @@
 <!-- /.container -->
 
   <!-- Footer -->
-  <div th:include="admin/template_admin.html::footer"></div>
+  <div th:insert="~{admin/template_admin.html::footer}"></div>
 
 
   <!-- Bootstrap core JavaScript -->

@@ -17,7 +17,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("admin/productos/**")
+                        .ignoringRequestMatchers("/admin/productos/**")
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/**").permitAll() // Permitir acceso sin autenticación
