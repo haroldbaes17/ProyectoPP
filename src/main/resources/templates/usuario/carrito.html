@@ -13,80 +13,106 @@
 
   <!-- Bootstrap core CSS -->
   <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
 
   <!-- Custom styles for this template -->
   <link th:href="@{/css/heroic-features.css}" rel="stylesheet">
+
+  <link th:href="@{css/styles.css}" rel="stylesheet">
 
 </head>
 
 <body>
 
   <!-- Navigation -->
-  <div th:insert="~{admin/template_admin.html::header}"></div>
+  <div th:insert="~{usuario/template_usuario.html::header}"></div>
 
     <!-- Page Content -->
     <div class="container">
 
 
-      <!-- Page Heading/Breadcrumbs -->
-      <h1 class="mt-4 mb-3">
-        Spring eCommerce <small>Carrito</small>
-      </h1>
+        <!-- Page Heading/Breadcrumbs -->
+        <h1 class="mt-4 mb-3">
+          Spring eCommerce <small>Carrito</small>
+        </h1>
 
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a th:href="@{/}">Regresar</a></li>
-        <li class="breadcrumb-item active">Carrito</li>
-      </ol>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a th:href="@{/}">Sigue comprando</a></li>
+          <li class="breadcrumb-item active">Carrito</li>
+        </ol>
 
       <!-- Blog Post -->
-        <div class="card mb-4">
-          <div class="card-body">
-            <div class="row">
-             <div class="col-lg-9">
-              <table class="table">
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="row">
+            <!-- Sección del producto -->
+            <div class="col-lg-9">
+              <div th:if="${#lists.isEmpty(carrito)}" class="alert alert-warning alert-dismissible text-center fw-bold custom-alert" role="alert">
+                <i class="bi bi-cart-x"></i> <!-- Ícono de carrito vacío -->
+                <strong>Tu carrito está vacío.</strong> ¡Explora nuestra tienda y añade productos!
+              </div>
+
+              <table th:if="${not #lists.isEmpty(carrito)}" class="table align-middle">
                 <thead>
-                  <tr>
-                    <th scope="col">Producto</th>
-                    <th scope="col">Precio</th>
-                    <th scope="col">Cantidad</th>
-                    <th scope="col">Total</th>
-                    <th scope="col">Acción</th>
-                  </tr>
+                <tr>
+                  <th scope="col">Producto</th>
+                  <th scope="col" class="text-center">Cantidad</th>
+                  <th scope="col" class="text-end">Subtotal</th>
+                </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td >Nombre</td>
-                    <td >Precio</td>
-                    <td>Cantidad</td>
-                    <td >Total</td>
-                    <td><a href="#" class="btn btn-danger">Quitar</a></td>
-                  </tr>
+                <tr th:each="item : ${carrito}">
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <img th:src="@{'/images/' + ${item.producto.imagen}}" alt="Camiseta Foto" class="me-3" width="80">
+                      <div>
+                        <strong th:text="${item.producto.nombre}"></strong>
+                        <p class="mb-1" th:text="'₡ ' +${item.producto.precio}" id="precio" > </p>
+                        <p class="text-muted small mb-1" th:text="'Tamaño: ' + ${item.talla}" ></p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    <div class="input-group input-group-sm w-50 mx-auto">
+                      <input type="text" class="form-control text-center" th:value="${item.cantidad}" readonly>
+                    </div>
+                    <a class="btn btn-sm btn-danger mt-2" th:href="@{/delete/cart(id=${item.producto.id})}">🗑</a>
+                  </td>
+                  <td class="text-end" th:text="'₡ ' + ${item.subtotal}" id="precio" > </td>
+                </tr>
                 </tbody>
               </table>
             </div>
 
+            <!-- Sección del resumen de compra -->
             <div class="col-lg-3">
-              <h2 class="card-title">SUBTOTAL</h2>
-
-              <ul class="list-group">
-                <li class="list-group-item"><h5>Total: $ 10</h5></li>
-                <a href="resumenorden.html" class="btn btn-dark">Ver Orden</a>
-              </ul>
+              <div class="border p-3 rounded">
+                <h5 class="fw-bold">Subtotal</h5>
+                <p class="fs-5" th:text="'₡ ' + ${pedido.subtotal} + ' CRC'" id="precio"></p>
+                <h5 class="fw-bold">Total</h5>
+                <p class="fs-5" th:text="'₡ ' + ${pedido.total} + ' CRC'" id="precio"></p>
+                <p class="text-muted small">Impuesto incluido. Los <a href="#">gastos de envío</a> se calculan en la pantalla de pago.</p>
+                <a th:href="@{/pedido}" class="btn btn-success w-100">Pagar pedido</a>
+              </div>
             </div>
-
           </div>
         </div>
       </div>
+
+    </div>
     </div>
     <!-- /.container -->
 
       <!-- Footer -->
-      <div th:insert="~{admin/template_admin.html::footer}"></div>
+  <div th:insert="~{usuario/template_usuario.html::footer}"></div>
 
 
-      <!-- Bootstrap core JavaScript -->
-      <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-      <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+  <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+  <script th:src="@{/js/script.js}"> </script>
 
   </body>
 

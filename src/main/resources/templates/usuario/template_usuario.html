@@ -13,6 +13,8 @@
 
   <!-- Bootstrap core CSS -->
   <link th:href="@{vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+  <!-- Agregar FontAwesome para los iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
   <!-- Custom styles for this template -->
   <link th:href="@{css/heroic-features.css}" rel="stylesheet">
@@ -42,9 +44,9 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item"><a class="nav-link"
-                                  href="carrito.html">Carrito</a></li>
+                                  th:href="@{/carrito}">Carrito</a></li>
           <li class="nav-item"><a class="nav-link"
-                                  href="login.html">Login</a></li>
+                                  th:href="@{/login}">Login</a></li>
         </ul>
       </div>
     </div>

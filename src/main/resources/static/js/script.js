@@ -6,7 +6,9 @@ function iniciarApp() {
     selectPaises();
     mensajesExito();
     eliminarProductoConfirmacion()
-    formatearPrecio()
+    formatearPrecios()
+    selectTalla()
+    cambiarCantidad()
 }
 
 function selectPaises() {
@@ -33,11 +35,11 @@ function selectPaises() {
 
 function mensajesExito() {
     setTimeout(function () {
-        let alert = document.querySelector(".alert");
-        if (alert) {
-            alert.classList.remove("show");
-            alert.classList.add("fade");
-            setTimeout(() => alert.remove(), 500); // Elimina el elemento del DOM después de la animación
+        let alerta = document.querySelector(".alerta");
+        if (alerta) {
+            alerta.classList.remove("show");
+            alerta.classList.add("fade");
+            setTimeout(() => alerta.remove(), 500); // Elimina el elemento del DOM después de la animación
         }
     }, 3000);
 }
@@ -67,13 +69,55 @@ function eliminarProductoConfirmacion() {
     });
 }
 
-function formatearPrecio() {
-    let precioElement = document.getElementById("precio");
-    let precioTexto = precioElement.innerText.replace("₡ ", ""); // Quitar símbolo ₡
-    let precioNumero = parseFloat(precioTexto).toFixed(2); // Asegurar dos decimales
+function formatearPrecios() {
+    document.querySelectorAll("[id^='precio']").forEach(precioElement => {
+        let precioTexto = precioElement.innerText.replace("₡ ", ""); // Quitar símbolo ₡
+        let precioNumero = parseFloat(precioTexto).toFixed(2); // Asegurar dos decimales
 
-    // Formatear el número con punto como separador de miles y coma para decimales
-    precioNumero = precioNumero.replace(/\B(?=(\d{3})+(?!\d))/g, " ").replace(" ", ",");
+        // Formatear el número con punto como separador de miles y coma para decimales
+        precioNumero = precioNumero.replace(/\B(?=(\d{3})+(?!\d))/g, " ").replace(" ", ",");
 
-    precioElement.innerText = `₡ ${precioNumero}`;
+        precioElement.innerText = `₡ ${precioNumero}`;
+    });
+}
+
+
+function selectTalla() {
+    const sizeOptions = document.querySelectorAll(".size-option");
+    const selectedSizeInput = document.getElementById("selectedSize");
+
+    sizeOptions.forEach(option => {
+        option.addEventListener("click", function () {
+            sizeOptions.forEach(opt => opt.classList.remove("active")); // Remueve la clase activa de todos
+            this.classList.add("active"); // Agrega la clase activa al seleccionado
+            selectedSizeInput.value = this.dataset.size; // Actualiza el valor oculto
+        });
+    });
+}
+
+function cambiarCantidad() {
+    const decreaseBtn = document.getElementById("decrease");
+    const increaseBtn = document.getElementById("increase");
+    const quantityInput = document.getElementById("cantidad");
+
+    // Asegurar que la cantidad siempre inicie en 1 si no es válida
+    if (!quantityInput.value || isNaN(quantityInput.value) || parseInt(quantityInput.value) < 1) {
+        quantityInput.value = 1;
+    }
+
+    decreaseBtn.addEventListener("click", function (event) {
+        event.preventDefault(); // Evita que el formulario se envíe
+        let currentValue = parseInt(quantityInput.value);
+        if (currentValue > 1) {
+            quantityInput.value = currentValue - 1;
+        }
+    });
+
+    increaseBtn.addEventListener("click", function (event) {
+        event.preventDefault(); // Evita que el formulario se envíe
+        let currentValue = parseInt(quantityInput.value);
+        if (currentValue < 100) {
+            quantityInput.value = currentValue + 1;
+        }
+    });
 }

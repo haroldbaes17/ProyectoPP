@@ -52,12 +52,19 @@
 
 
             <div class="col-lg-6">
-              <form th:action="@{/carrito}" method="POST">
-                <input type="hidden" th:value="${producto.id}" name="id">
+              <form th:action="@{/carrito}" method="post" enctype="multipart/form-data" th:object="${carritoDto}" >
+
+                <input type="hidden" name="idProducto" th:field="*{idProducto}" th:value="${producto.id}">
+
+
                 <h2 class="card-title" th:text="${producto.nombre}"></h2>
 
                 <ul class="list-group">
-                  <li class="list-group-item"><h5 th:text="'Precio:' "></h5><h5 th:text=" '₡ ' + ${producto.precio}" id="precio"> </h5></li>
+                  <li class="list-group-item"><h5 th:text="'Precio:' "></h5>
+                    <h5 th:text=" '₡ ' + ${producto.precio}" id="precio"></h5>
+                    <input type="hidden" th:field="*{precioUnitario}" name="precioUnitario" th:value="${producto.precio}">
+
+                  </li>
                   <li class="list-group-item">
                     <p th:text="'Equipo: ' + ${producto.equipo}"></p>
                   </li><li class="list-group-item">
@@ -68,18 +75,30 @@
                     <p th:text="'Descripción: ' + ${producto.descripcion}"></p>
                   </li>
 
-                  <li class="list-group-item"><h6>
-                    <label class="col-form-label">Tamaño</label>
-                    <div class="input-group mb-3">
-                      <label class="">S</label>
-                      <input type="hidden" value="" id="talla">
+                  <div class="container mt-3 mb-3">
+                    <h6>Tamaño</h6>
+                    <div id="sizeSelector">
+                      <span class="size-option" data-size="S">S</span>
+                      <span class="size-option" data-size="M">M</span>
+                      <span class="size-option" data-size="L">L</span>
+                      <span class="size-option" data-size="XL">XL</span>
+                      <span class="size-option" data-size="2XL">2XL</span>
                     </div>
-                  </h6></li>
+                    <input type="hidden" id="selectedSize" value="" name="talla" th:field="*{talla}">
+                    <p th:if="${#fields.hasErrors('talla')}" th:errorclass="text-danger"
+                       th:errors="${carritoDto.talla}"></p>
+                  </div>
 
-                  <li class="list-group-item"><h6>
-                    Cantidad: <input type="number" id="cantidad" name="cantidad" autocomplete="off"
-                    min="1" max="100" value="1">
-                  </h6></li>
+                  <div class="container">
+                    <h6>Cantidad</h6>
+                    <div class="quantity-container">
+                      <button type="button" class="quantity-btn" id="decrease">−</button>
+                      <input type="text" id="cantidad" class="quantity-input" value="1" name="cantidad" readonly th:field="*{cantidad}" >
+                      <button type="button" class="quantity-btn" id="increase">+</button>
+                    </div>
+                    <p th:if="${#fields.hasErrors('cantidad')}" th:errorclass="text-danger"
+                       th:errors="${carritoDto.cantidad}"></p>
+                  </div>
                 </ul>
 
 
