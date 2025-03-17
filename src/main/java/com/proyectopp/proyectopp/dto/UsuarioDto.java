@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class UsuarioDto {
+    private int id;
+
     @NotEmpty
     private String nombre;
 
@@ -28,6 +30,14 @@ public class UsuarioDto {
     private Boolean confirmado;
 
     private String token;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public @NotEmpty String getNombre() {
         return nombre;
@@ -99,5 +109,21 @@ public class UsuarioDto {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    @Override
+    public String toString() {
+        return "UsuarioDto{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", apellidos='" + apellidos + '\'' +
+                ", cedula='" + cedula + '\'' +
+                ", correoElectronico='" + correoElectronico + '\'' +
+                ", password='" + password + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", es_admin=" + es_admin +
+                ", confirmado=" + confirmado +
+                ", token='" + token + '\'' +
+                '}';
     }
 }

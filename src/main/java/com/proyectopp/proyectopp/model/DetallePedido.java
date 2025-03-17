@@ -6,7 +6,6 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Entity
-@Data
 @Table(name = "detalle_pedido")
 public class DetallePedido {
     @Id
@@ -89,5 +88,16 @@ public class DetallePedido {
         this.subtotal = subtotal;
     }
 
-
+    @Override
+    public String toString() {
+        return "DetallePedido{" +
+                "id=" + id +
+                ", pedido=" + pedido +
+                ", producto=" + producto +
+                ", talla='" + talla + '\'' +
+                ", cantidad=" + cantidad +
+                ", precioUnitario=" + precioUnitario +
+                ", subtotal=" + subtotal +
+                '}';
+    }
 }

@@ -1,6 +1,6 @@
 package com.proyectopp.proyectopp.controller;
 
-import com.proyectopp.proyectopp.dto.CarritoDto;
+import com.proyectopp.proyectopp.dto.*;
 import com.proyectopp.proyectopp.model.DetallePedido;
 import com.proyectopp.proyectopp.model.Pedido;
 import com.proyectopp.proyectopp.model.Producto;
@@ -19,14 +19,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping("/")
 public class HomeController {
-    private final Logger log = LoggerFactory.getLogger(HomeController.class);
+     private final Logger log = LoggerFactory.getLogger(HomeController.class);
 
     @Autowired
     private ProductoRepository repository;
@@ -35,7 +34,7 @@ public class HomeController {
     private UsuarioRepository usuarioRepository;
 
     // Para almacenar los detalles del pedido
-    List<DetallePedido> detalles = new ArrayList<>();
+    public static List<DetallePedido> detalles = new ArrayList<>();
 
     // Almacena los datos del pedido
     Pedido pedido = new Pedido();
@@ -55,6 +54,7 @@ public class HomeController {
         CarritoDto carritoDto = new CarritoDto();
         carritoDto.setIdProducto(producto.getId());
         carritoDto.setPrecioUnitario(producto.getPrecio());
+
         model.addAttribute("carritoDto", carritoDto);
 //        log.info("CarritoDto: " + carritoDto);
 
@@ -75,13 +75,12 @@ public class HomeController {
                 .sum();
 
         // Seteo de Pedido
-        pedido.setFecha(LocalDate.now());
-        pedido.setEstado("Pendiente");
-        pedido.setSubtotal(BigDecimal.valueOf(sumaTotal));
-        pedido.setTotal(BigDecimal.valueOf(sumaTotal + sumaTotal * 0.13));
+        PedidoDto pedidoDto = new PedidoDto();
+        pedidoDto.setSubtotal(BigDecimal.valueOf(sumaTotal));
+        pedidoDto.setTotal(BigDecimal.valueOf(sumaTotal + sumaTotal * 0.13));
+        pedidoDto.setDetalles(detalles);
 
-        model.addAttribute("carrito", detalles);
-        model.addAttribute("pedido", pedido);
+        model.addAttribute("pedidoDto", pedidoDto);
 
         return "usuario/carrito";
     }
@@ -97,8 +96,6 @@ public class HomeController {
         Producto producto = repository.findById(carritoDto.getIdProducto()).get();
         DetallePedido detallePedido = new DetallePedido();
         double sumaTotal = 0;
-
-
 
         if (result.hasErrors()) {
             model.addAttribute("producto", producto);
@@ -119,6 +116,7 @@ public class HomeController {
         for (DetallePedido detalle : detalles) {
             if (detalle.getProducto().getId() == (producto.getId()) &&
                     detalle.getTalla().equals(carritoDto.getTalla())) {
+
                 detalle.setCantidad(detalle.getCantidad() + cantidad);
                 detalle.setSubtotal(detalle.getPrecioUnitario().multiply(BigDecimal.valueOf(detalle.getCantidad())));
                 encontrado = true;
@@ -129,39 +127,34 @@ public class HomeController {
         // Si no se encontró, agregarlo como un nuevo elemento
         if (!encontrado) {
             detalles.add(detallePedido);
-
-
-            sumaTotal = detalles.stream()
-                    .mapToDouble(dt -> dt.getSubtotal().doubleValue())
-                    .sum();
         }
+        sumaTotal = detalles.stream()
+                .mapToDouble(dt -> dt.getSubtotal().doubleValue())
+                .sum();
 
+        //Seteos de PedidoDto
+        PedidoDto pedidoDto = new PedidoDto();
+        pedidoDto.setSubtotal(BigDecimal.valueOf(sumaTotal));
+        pedidoDto.setTotal(BigDecimal.valueOf(sumaTotal + sumaTotal * 0.13));
+        pedidoDto.setDetalles(detalles);
 
-        //Seteos de Pedido
-
-        //seteo de usuario
-        //Seteo de direccion
-        pedido.setFecha(LocalDate.now());
-        pedido.setEstado("Pendiente");
-        pedido.setSubtotal(BigDecimal.valueOf(sumaTotal));
-        pedido.setTotal(BigDecimal.valueOf(sumaTotal + sumaTotal * 0.13));
-
-        model.addAttribute("carrito", detalles);
-        model.addAttribute("pedido", pedido);
+        model.addAttribute("pedidoDto", pedidoDto);
 
         return "usuario/carrito";
     }
 
-    @GetMapping("/delete/cart")
+    //Recibir Dto
+    @GetMapping("/delete-from-cart")
     public String deleteProductoCart(
             @RequestParam int id,
+            @RequestParam String talla,
             Model model
     ) {
         // Lista Nueva de productos en el carrito
         List<DetallePedido> pedidosNuevos = new ArrayList<>();
 
         for (DetallePedido detalle : detalles) {
-            if (detalle.getProducto().getId() == id) {
+            if (detalle.getProducto().getId() == id && detalle.getTalla().equalsIgnoreCase(talla)) {
                 if (detalle.getCantidad() > 1) {
                     // Restar 1 a la cantidad del producto
                     detalle.setCantidad(detalle.getCantidad() - 1);
@@ -181,37 +174,52 @@ public class HomeController {
                 .mapToDouble(dt -> dt.getSubtotal().doubleValue())
                 .sum();
 
-        // Seteo de Pedido
-        pedido.setFecha(LocalDate.now());
-        pedido.setEstado("Pendiente");
-        pedido.setSubtotal(BigDecimal.valueOf(sumaTotal));
-        pedido.setTotal(BigDecimal.valueOf(sumaTotal + sumaTotal * 0.13));
+        // Seteo de PedidoDto
+        PedidoDto pedidoDto = new PedidoDto();
+        pedidoDto.setSubtotal(BigDecimal.valueOf(sumaTotal));
+        pedidoDto.setTotal(BigDecimal.valueOf(sumaTotal + sumaTotal * 0.13));
+        pedidoDto.setDetalles(detalles);
 
-        model.addAttribute("carrito", detalles);
-        model.addAttribute("pedido", pedido);
+        model.addAttribute("pedidoDto", pedidoDto);
 
         return "usuario/carrito";
     }
 
+
+    //Crear Dtos
     @GetMapping("/pedido")
     public String pedidoHome(Model model) {
 
+        PedidoDto pedidoDto = new PedidoDto();
+        DireccionDto direccionDto = new DireccionDto();
+        UsuarioDto usuarioDto = new UsuarioDto();
+
         Usuario usuario = usuarioRepository.findById(2).get();
+
 
         // Calcular el total del pedido
         double sumaTotal = detalles.stream()
                 .mapToDouble(dt -> dt.getSubtotal().doubleValue())
                 .sum();
 
-        // Seteo de Pedido
-        pedido.setFecha(LocalDate.now());
-        pedido.setEstado("Pendiente");
-        pedido.setSubtotal(BigDecimal.valueOf(sumaTotal));
-        pedido.setTotal(BigDecimal.valueOf(sumaTotal + sumaTotal * 0.13));
+        //Seteos UsuarioDto
+        usuarioDto.setId(usuario.getId());
+        usuarioDto.setNombre(usuario.getNombre());
+        usuarioDto.setApellidos(usuario.getApellidos());
+        usuarioDto.setCedula(usuario.getCedula());
+        usuarioDto.setCorreoElectronico(usuario.getCorreoElectronico());
+        usuarioDto.setTelefono(usuario.getTelefono());
 
-        model.addAttribute("carrito", detalles);
-        model.addAttribute("pedido", pedido);
-        model.addAttribute("usuario", usuario);
+        //Setetos PedidoDto
+        pedidoDto.setSubtotal(BigDecimal.valueOf(sumaTotal));
+        pedidoDto.setTotal(BigDecimal.valueOf(sumaTotal + sumaTotal * 0.13));
+        pedidoDto.setDetalles(detalles);
+
+        model.addAttribute("pedidoDto", pedidoDto);
+        model.addAttribute("usuarioDto", usuarioDto);
+        model.addAttribute("direccionDto", direccionDto);
+
+        model.addAttribute("detalles", detalles);
 
         return "usuario/resumenorden";
     }
