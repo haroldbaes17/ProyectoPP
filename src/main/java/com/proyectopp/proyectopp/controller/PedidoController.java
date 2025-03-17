@@ -4,6 +4,8 @@ import com.proyectopp.proyectopp.dto.DireccionDto;
 import com.proyectopp.proyectopp.dto.PedidoDto;
 import com.proyectopp.proyectopp.dto.UsuarioDto;
 import com.proyectopp.proyectopp.model.DetallePedido;
+import com.proyectopp.proyectopp.model.Direccion;
+import com.proyectopp.proyectopp.model.Pedido;
 import com.proyectopp.proyectopp.model.Usuario;
 import com.proyectopp.proyectopp.repository.DetallePedidoRepository;
 import com.proyectopp.proyectopp.repository.DireccionRepository;
@@ -31,7 +33,7 @@ public class PedidoController {
     private final Logger log = LoggerFactory.getLogger(PedidoController.class);
 
     @Autowired
-    private PedidoRepository PedioRepository;
+    private PedidoRepository pedidoRepository;
 
     @Autowired
     private DetallePedidoRepository detalleRepository;
@@ -41,8 +43,6 @@ public class PedidoController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-
-
 
     // Para almacenar los detalles del pedido
     List<DetallePedido> detalles = HomeController.detalles;
@@ -57,13 +57,54 @@ public class PedidoController {
             RedirectAttributes redirectAttributes
 
     ) {
-        log.info("PedidoDto: {}", pedidoDto);
-        for (DetallePedido detalle : detalles) {
-            System.out.println(detalle.toString());
-        }
-        log.info(direccionDto.toString());
-        log.info(usuarioDto.toString());
 
+//        log.info("PedidoDto: {}", pedidoDto);
+//        for (DetallePedido detalle : detalles) {
+//            System.out.println(detalle.toString());
+//        }
+//        log.info(direccionDto.toString());
+//        log.info(usuarioDto.toString());
+
+        Direccion direccion = new Direccion();
+        Pedido pedido = new Pedido();
+
+        Usuario usuario = usuarioRepository.findById(usuarioDto.getId()).get();
+
+        //Seteos de Direccion
+        direccion.setUsuario(usuario);
+        direccion.setProvincia(direccionDto.getProvincia());
+        direccion.setCanton(direccionDto.getCanton());
+        direccion.setDistrito(direccionDto.getDistrito());
+        direccion.setDireccionExacta(direccionDto.getDireccionExacta());
+
+        direccionRepository.save(direccion);
+
+        //Seteos de Pedido
+        pedido.setUsuario(usuario);
+        pedido.setDireccion(direccion);
+        pedido.setFecha(LocalDate.now());
+        pedido.setEstado("Pendiente");
+        pedido.setSubtotal(pedidoDto.getSubtotal());
+        pedido.setTotal(pedidoDto.getTotal());
+
+        pedidoRepository.save(pedido);
+
+        //Seteos de DetallePedido
+        for (DetallePedido dt : detalles) {
+            DetallePedido detallePedido = new DetallePedido();
+            detallePedido.setPedido(pedido);
+            detallePedido.setProducto(dt.getProducto());
+            detallePedido.setTalla(dt.getTalla());
+            detallePedido.setCantidad(dt.getCantidad());
+            detallePedido.setPrecioUnitario(dt.getPrecioUnitario());
+            detallePedido.setSubtotal(dt.getSubtotal());
+
+            detalleRepository.save(detallePedido);
+        }
+
+        detalles.clear();
+        HomeController.detalles.clear();
+        model.addAttribute("success", true);
         return "redirect:/pedido";
     }
 }
