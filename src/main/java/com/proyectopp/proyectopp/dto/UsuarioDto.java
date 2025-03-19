@@ -19,8 +19,10 @@ public class UsuarioDto {
     @NotEmpty
     private String correoElectronico;
 
-    @Size(min = 8, message = "El contraseña debe tener al menos 8 caracteres")
+    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
     private String password;
+
+    private String confirmarPassword;
 
     @NotEmpty
     private String telefono;
@@ -79,6 +81,14 @@ public class UsuarioDto {
         this.password = password;
     }
 
+    public String getConfirmarPassword() {
+        return confirmarPassword;
+    }
+
+    public void setConfirmarPassword(String confirmarPassword) {
+        this.confirmarPassword = confirmarPassword;
+    }
+
     public @NotEmpty String getTelefono() {
         return telefono;
     }
@@ -120,6 +130,7 @@ public class UsuarioDto {
                 ", cedula='" + cedula + '\'' +
                 ", correoElectronico='" + correoElectronico + '\'' +
                 ", password='" + password + '\'' +
+                ", confirmarPassword='" + confirmarPassword + '\'' +
                 ", telefono='" + telefono + '\'' +
                 ", es_admin=" + es_admin +
                 ", confirmado=" + confirmado +

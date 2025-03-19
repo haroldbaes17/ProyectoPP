@@ -159,3 +159,26 @@ footer {
     font-size: 0.9rem;
 }
 
+.category-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+p a {
+    text-decoration: none;
+    font-weight: bold;
+    color: black;
+}
+p a:hover {
+    color: red;
+}
+

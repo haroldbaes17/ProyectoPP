@@ -18,14 +18,14 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/admin/productos/**")
+                        .ignoringRequestMatchers("/registrarse")
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/**").permitAll() // Permitir acceso sin autenticación
                         //Proteger las rutas al terminar el proyecto
                         .anyRequest().authenticated()
                 )
-                .formLogin(form -> form
-                        .defaultSuccessUrl("/", true))
+                .formLogin(form -> form.disable())
                 .logout(config -> config.logoutUrl("/logout").logoutSuccessUrl("/"))
                 .build();
     }

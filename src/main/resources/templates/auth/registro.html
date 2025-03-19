@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Spring eCommerce - Registro</title>
+
+  <!-- Bootstrap CSS (versión 5) -->
+  <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  >
+
+  <!-- Estilos personalizados -->
+  <link th:href="@{/css/styles-register.css}" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" th:href="@{/}">Spring Ecommerce</a>
+    <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarResponsive"
+            aria-controls="navbarResponsive"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/login}">Login</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Sección de Registro -->
+<div class="container py-5 vh  ">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-6">
+      <div class="card shadow-lg">
+        <div class="card-header bg-dark text-white text-center">
+          <h3 class="mb-0">Registro</h3>
+        </div>
+        <div class="card-body p-4">
+
+          <div th:if="${succes}"
+               class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Usuario Creado Correctamente!</strong>
+            <a class="ms-2" href="/login">Inicia Sesión</a>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" ></button>
+          </div>
+
+          <form th:action="@{/registrarse}" method="post" th:object="${usuarioDto}" >
+
+            <!-- Fila para Nombres y Apellidos -->
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input
+                        type="text"
+                        class="form-control"
+                        id="nombre"
+                        name="nombre"
+                        th:field="*{nombre}"
+                        required
+                        placeholder="Nombre"
+                >
+                <p th:if="${#fields.hasErrors('nombre')}"
+                   th:errorclass="text-danger"
+                   th:errors="*{nombre}" ></p>
+              </div>
+              <div class="col-md-6">
+                <label for="apellidos" class="form-label">Apellidos</label>
+                <input
+                        type="text"
+                        class="form-control"
+                        id="apellidos"
+                        name="apellidos"
+                        th:field="*{apellidos}"
+                        required
+                        placeholder="Apellidos"
+                >
+                <p th:if="${#fields.hasErrors('apellidos')}"
+                   th:errorclass="text-danger"
+                   th:errors="*{apellidos}" ></p>
+              </div>
+            </div>
+
+            <!-- Fila para Cédula y Teléfono -->
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label for="cedula" class="form-label">Cédula</label>
+                <input
+                        type="text"
+                        class="form-control"
+                        id="cedula"
+                        name="cedula"
+                        th:field="*{cedula}"
+                        required
+                        placeholder="Cédula"
+                >
+                <p th:if="${#fields.hasErrors('cedula')}"
+                   th:errorclass="text-danger"
+                   th:errors="*{cedula}" ></p>
+              </div>
+              <div class="col-md-6">
+                <label for="telefono" class="form-label">Teléfono</label>
+                <input
+                        type="text"
+                        class="form-control"
+                        id="telefono"
+                        name="telefono"
+                        th:field="*{telefono}"
+                        required
+                        placeholder="Teléfono"
+                >
+                <p th:if="${#fields.hasErrors('telefono')}"
+                   th:errorclass="text-danger"
+                   th:errors="*{telefono}" ></p>
+              </div>
+            </div>
+
+            <!-- Correo electrónico -->
+            <div class="mb-3">
+              <label for="email" class="form-label">Correo electrónico</label>
+              <input
+                      type="email"
+                      class="form-control"
+                      id="email"
+                      name="email"
+                      th:field="*{correoElectronico}"
+                      required
+                      placeholder="Correo Eléctronico"
+              >
+              <p th:if="${#fields.hasErrors('correoElectronico')}"
+                 th:errorclass="text-danger"
+                 th:errors="*{correoElectronico}" ></p>
+            </div>
+
+            <!-- Fila para Contraseña y Confirmar Contraseña -->
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label for="password" class="form-label">Contraseña</label>
+                <input
+                        type="password"
+                        class="form-control"
+                        id="password"
+                        name="password"
+                        th:field="*{password}"
+                        required
+                        placeholder="Contraseña"
+                >
+                <p th:if="${#fields.hasErrors('password')}"
+                   th:errorclass="text-danger"
+                   th:errors="*{password}" ></p>
+              </div>
+              <div class="col-md-6">
+                <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
+                <input
+                        type="password"
+                        class="form-control"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        th:field="*{confirmarPassword}"
+                        required
+                        placeholder="Confirmar Contraseña"
+                >
+                <p th:if="${#fields.hasErrors('confirmarPassword')}"
+                   th:errorclass="text-danger"
+                   th:errors="*{confirmarPassword}" ></p>
+              </div>
+            </div>
+            <label class="form-check">
+              <input type="checkbox" id="toggleAddress" />
+              Quiero añadir mi dirección ahora
+            </label>
+
+            <!-- Botón de Envío -->
+            <div class="d-grid mt-3">
+              <button type="submit" class="btn btn-success btn-lg">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer (si tienes un fragment de Thymeleaf para el footer) -->
+<div th:insert="~{usuario/template_usuario.html :: footer}"></div>
+
+<!-- Bootstrap JS -->
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+></script>
+
+</body>
+</html>

@@ -7,6 +7,7 @@ import com.proyectopp.proyectopp.model.Producto;
 import com.proyectopp.proyectopp.model.Usuario;
 import com.proyectopp.proyectopp.repository.ProductoRepository;
 import com.proyectopp.proyectopp.repository.UsuarioRepository;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/")
@@ -38,10 +40,13 @@ public class HomeController {
 
     // Almacena los datos del pedido
     Pedido pedido = new Pedido();
+    @Autowired
+    private ProductoRepository productoRepository;
 
     @GetMapping("")
-    public String home(Model model) {
+    public String home(Model model, HttpSession session) {
         model.addAttribute("productos", repository.findAll());
+//        log.info("session: " + session.getAttribute("idUsuario"));
 
         return "usuario/home";
     }
@@ -188,13 +193,13 @@ public class HomeController {
 
     //Crear Dtos
     @GetMapping("/pedido")
-    public String pedidoHome(Model model) {
+    public String pedidoHome(Model model, HttpSession session) {
 
         PedidoDto pedidoDto = new PedidoDto();
         DireccionDto direccionDto = new DireccionDto();
         UsuarioDto usuarioDto = new UsuarioDto();
 
-        Usuario usuario = usuarioRepository.findById(2).get();
+        Usuario usuario = usuarioRepository.findById(Integer.parseInt(session.getAttribute("idUsuario").toString())).get();
 
 
         // Calcular el total del pedido
@@ -222,6 +227,21 @@ public class HomeController {
         model.addAttribute("detalles", detalles);
 
         return "usuario/resumenorden";
+    }
+
+    @PostMapping("/buscar-producto")
+    public String search(
+            Model model,
+            @RequestParam String nombre
+    ) {
+
+//        log.info("Nombre: " + nombre);
+
+        List<Producto> productos = productoRepository.findAll().stream()
+                .filter(p -> p.getNombre().contains(nombre)).collect(Collectors.toList());
+
+        model.addAttribute("productos", productos);
+        return "usuario/home";
     }
 
 }

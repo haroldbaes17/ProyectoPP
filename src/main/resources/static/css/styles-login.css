@@ -1,0 +1,37 @@
+/* styles-login.css */
+
+/* Estilo general del body */
+body {
+    background-color: #f8f9fa; /* Gris claro para resaltar el card */
+    font-family: 'Roboto', sans-serif; /* Usa la fuente que prefieras */
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilo del card */
+.card {
+    border-radius: 0.5rem;
+}
+
+.card-header {
+    border-radius: 0.5rem 0.5rem 0 0;
+    padding: 1rem;
+}
+
+/* Input focus */
+.form-control:focus {
+    border-color: #343a40; /* Gris oscuro (coincide con .bg-dark) */
+    box-shadow: 0 0 0 0.2rem rgba(52,58,64,0.25);
+}
+
+/* Botón Ingresar */
+.btn-dark {
+    background-color: #343a40;
+    border-color: #343a40;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-dark:hover {
+    background-color: #23272b;
+    border-color: #1d2124;
+}

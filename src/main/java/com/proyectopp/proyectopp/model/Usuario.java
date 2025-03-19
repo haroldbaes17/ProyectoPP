@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Data
 @Table(name = "usuarios")
 public class Usuario {
     @Id
@@ -117,5 +116,21 @@ public class Usuario {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", apellidos='" + apellidos + '\'' +
+                ", cedula='" + cedula + '\'' +
+                ", correoElectronico='" + correoElectronico + '\'' +
+                ", password='" + password + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", es_admin=" + es_admin +
+                ", confirmado=" + confirmado +
+                ", token='" + token + '\'' +
+                '}';
     }
 }
