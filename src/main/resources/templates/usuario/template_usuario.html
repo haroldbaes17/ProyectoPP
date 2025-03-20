@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 
 <head>
   <meta charset="utf-8">
@@ -18,9 +21,9 @@
   <link th:href="@{/css/styles.css}" rel="stylesheet">
 </head>
 
-<body>
+<body >
 
-<!-- Navigation -->
+<!-- Navigation Usuario -->
 <div th:fragment="header">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow">
     <div class="container">
@@ -65,19 +68,29 @@
 
         <!-- Íconos de usuario y carrito -->
         <ul class="navbar-nav ml-3">
-          <li class="nav-item">
+          <li class="nav-item" sec:authorize="isAuthenticated()">
             <a class="nav-link" th:href="@{/carrito}">
               <i class="fa fa-shopping-cart"></i> Carrito
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" th:href="@{/login}">
+          <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link" th:href="@{/mi-perfil}">
               <i class="fa fa-user"></i> Mi Cuenta
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" sec:authorize="!isAuthenticated()">
             <a class="nav-link" th:href="@{/login}">
               <i class="fa fa-user"></i> Iniciar Sesion
+            </a>
+          </li>
+          <li class="nav-item" sec:authorize="!isAuthenticated()">
+            <a class="nav-link" th:href="@{/registrarse}">
+              <i class="fa fa-user"></i> Regístrate
+            </a>
+          </li>
+          <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link" th:href="@{/logout}">
+              <i class="fa fa-user"></i> Cerrar Sesión
             </a>
           </li>
         </ul>
@@ -85,6 +98,8 @@
     </div>
   </nav>
 </div>
+
+
 
 <!-- Footer -->
 <div th:fragment="footer">

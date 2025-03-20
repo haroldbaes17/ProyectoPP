@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" >
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 
@@ -38,7 +40,11 @@
       <div class="row text-center">
         <div class="col-lg-3 col-md-6 d-flex align-items-stretch mb-4" th:each="producto : ${productos}">
           <div class="card h-100 d-flex flex-column">
-            <img class="card-img-top img-fluid" th:src="@{'/images/' + ${producto.imagen}}" alt="Imagen" style="height: 250px; object-fit: cover;">
+            <img class="card-img-top img-fluid mx-auto d-block"
+                 th:src="@{'/images/' + ${producto.imagen}}"
+                 alt="Imagen"
+                 style="height: 250px; object-fit: cover;">
+
             <div class="card-body flex-grow-1">
               <p class="card-text" th:text="${producto.nombre}"></p>
             </div>

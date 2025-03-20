@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
 
 <head>
 
@@ -101,8 +104,14 @@
                   </div>
                 </ul>
 
+                <div class="container mt-4" sec:authorize="!isAuthenticated()">
+                  <div class="alert alert-info text-center custom-alert" role="alert">
+                    <a th:href="@{login}" class="">Inicia sesión</a> para añadir objetos a tu carrito.
+                  </div>
+                </div>
 
-                <button type="submit"  class="btn btn-dark mt-3">Añadir al carrito </button>
+
+                <button type="submit"  class="btn btn-dark mt-3" sec:authorize="isAuthenticated()" >Añadir al carrito </button>
 
               </form>
             </div>

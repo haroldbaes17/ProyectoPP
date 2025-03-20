@@ -4,14 +4,21 @@ import com.proyectopp.proyectopp.dto.LoginDto;
 import com.proyectopp.proyectopp.dto.UsuarioDto;
 import com.proyectopp.proyectopp.model.Usuario;
 import com.proyectopp.proyectopp.repository.UsuarioRepository;
+import com.proyectopp.proyectopp.service.UsuarioService;
 import com.proyectopp.proyectopp.utils.TokenGenerator;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,7 +35,12 @@ public class UsuarioController {
     @Autowired
     private UsuarioRepository repository;
 
+    @Autowired
+    private UsuarioService service;
+
     Logger log = LoggerFactory.getLogger(UsuarioController.class);
+    @Autowired
+    private UsuarioService usuarioService;
 
     @GetMapping("/registrarse")
     public String register(Model model) {
@@ -116,13 +128,13 @@ public class UsuarioController {
     public String login(
             @Valid @ModelAttribute LoginDto loginDto,
             HttpSession session,
+            HttpServletRequest request,
             BindingResult result
     ){
 
         var bCryptEnconder = new BCryptPasswordEncoder();
 
         Usuario usuario = repository.findByCorreoElectronico(loginDto.getCorreoElectronico());
-        log.info("Usuario: " + usuario.toString());
 
         if (usuario == null) {
             result.addError (
@@ -143,9 +155,33 @@ public class UsuarioController {
 
         session.setAttribute("idUsuario", usuario.getId());
 
+        // Crear la autenticación
+        UserDetails userDetails = usuarioService.loadUserByUsername(usuario.getCorreoElectronico());
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+
+        // Persistir el SecurityContext en la sesión para que persista en siguientes peticiones
+        request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                SecurityContextHolder.getContext());
+
+
         if (usuario.isEs_admin()) {
             return "redirect:/admin";
         }
         return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        HomeController.detalles.clear();
+        return "redirect:/";
+    }
+
+    @GetMapping("/mi-perfil")
+    public String miPerfil(Model model) {
+
+        return "usuario/profile";
     }
 }
