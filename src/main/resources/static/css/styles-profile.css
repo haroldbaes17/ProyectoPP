@@ -63,3 +63,42 @@ body {
 .profile-actions h5 {
     margin-bottom: 1rem;
 }
+
+/* Estilos para la cabecera del perfil */
+.profile-header {
+    background-color: #f8f9fa;
+    border: 1px solid #eee;
+    border-radius: 8px;
+}
+
+/* Avatar */
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+/* Tarjetas de pedidos */
+.order-card {
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.order-card-header {
+    background-color: #f8f9fa;
+}
+
+.order-card-body {
+    background-color: #ffffff;
+}
+
+/* Badges para el estado */
+.badge-warning {
+    background-color: #ffc107 !important; /* Pendiente */
+    color: #212529 !important;
+}
+
+.badge-success {
+    background-color: #28a745 !important; /* Completado */
+}

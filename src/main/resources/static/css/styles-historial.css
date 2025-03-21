@@ -1,0 +1,32 @@
+/* Ejemplo de estilos personalizados para el historial */
+
+/* Ajusta el card principal */
+.card {
+    border-radius: 0.5rem;
+}
+
+/* Personaliza el header de cada pedido */
+.card-header {
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Íconos y texto en el header */
+.card-header i {
+    color: #6c757d; /* Gris Bootstrap */
+    margin-right: 0.4rem;
+}
+
+/* Ajuste general para imágenes */
+img.img-fluid {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 2px;
+}
+
+/* Pequeño margen en la parte derecha de los íconos */
+.me-1 {
+    margin-right: 0.25rem !important;
+}
+.me-2 {
+    margin-right: 0.5rem !important;
+}

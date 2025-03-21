@@ -2,24 +2,17 @@
 <html lang="es"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <title>Spring eCommerce</title>
-
-
     <!-- Bootstrap core CSS -->
     <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
-
     <!-- Custom styles for this template -->
     <link th:href="@{/css/heroic-features.css}" rel="stylesheet">
     <link th:href="@{/css/styles-profile.css}" rel="stylesheet">
-
 </head>
 <body class="d-flex flex-column min-vh-100">
 <!-- Navigation -->
@@ -27,68 +20,114 @@
 
 <div class="container my-5">
     <div class="row">
-        <!-- Columna izquierda: foto, nombre y estadísticas -->
+        <!-- Columna izquierda: foto, nombre y acciones -->
         <div class="col-md-4 mb-4">
-            <div class="profile-header">
+            <div class="profile-header text-center p-3 mb-4 shadow-sm rounded">
                 <!-- Imagen de perfil (avatar) -->
-                <img th:src="@{/img/avatar.png}" alt="Foto de perfil" class="profile-avatar">
-
+                <img th:src="@{/img/avatar.png}" alt="Foto de perfil" class="profile-avatar mb-3">
                 <!-- Nombre y alias del usuario -->
-                <h3 class="profile-name">Juan Pérez</h3>
-
+                <h3 class="profile-name mb-0" th:text="*{usuarioDto.nombre} + ' ' + *{usuarioDto.apellidos}"></h3>
                 <!-- Estadísticas (ejemplo) -->
-                <div class="profile-stats">
+                <div class="profile-stats mt-3">
                     <div class="stat-item">
-                        <strong>Compradas:</strong> <span>12</span>
+                        <strong>Compras:</strong> <span th:text="*{cantidadPedidos}"></span>
                     </div>
                     <div class="stat-item">
-                        <strong>En carrito:</strong> <span>3</span>
+                        <strong>En carrito:</strong> <span th:text="*{cantidadCarrito}"></span>
                     </div>
                 </div>
             </div>
-
-            <!-- Nueva sección de acciones -->
-            <div class="profile-actions">
+            <!-- Sección de acciones -->
+            <div class="profile-actions card p-3 shadow-sm">
                 <h5>Acciones</h5>
                 <hr>
                 <div class="btn-group-vertical w-100" role="group">
-                    <a href="#" class="btn btn-outline-primary mb-3">Actualizar Perfil</a>
-                    <a href="#" class="btn btn-outline-success mb-3">Agregar Dirección</a>
-                    <a href="#" class="btn btn-outline-secondary">Ver Pedidos</a>
-                    <a href="#" class="btn btn-outline-info mt-3">Historial de Pedidos</a>
+                    <button id="btnUserInfo" class="btn btn-outline-primary mb-3">Información de Usuario</button>
+                    <button id="btnUpdateProfile" class="btn btn-outline-success mb-3">Actualizar Perfil</button>
+                    <button id="btnUpdateAddress" class="btn btn-outline-secondary">Actualizar Dirección</button>
+                    <a th:href="@{/historial}" class="btn btn-outline-info mt-3" >Historial de Pedidos</a>
                 </div>
             </div>
         </div>
 
-        <!-- Columna derecha: formulario con datos de la cuenta -->
+        <!-- Columna derecha: contenedores de formularios -->
         <div class="col-md-8">
-            <div class="profile-container">
+            <!-- Contenedor para Información de Usuario -->
+            <div id="formUserInfo" class="profile-container card p-4 mb-4 shadow-sm" th:object="${usuarioDto}">
                 <h4 class="mb-3">Información de la Cuenta</h4>
-                    <!-- Cédula -->
-                    <div class="form-group">
-                        <label>Cédula</label>
-                        <p class="form-control"> Cédula </p>
+                <!-- Cédula -->
+                <div class="form-group">
+                    <label class="font-weight-bold">Cédula</label>
+                    <p class="form-control-plaintext" th:text="*{cedula}"></p>
+                </div>
+                <!-- Correo electrónico -->
+                <div class="form-group">
+                    <label class="font-weight-bold">Correo Electrónico</label>
+                    <p class="form-control-plaintext" th:text="*{correoElectronico}"></p>
+                </div>
+                <!-- Teléfono -->
+                <div class="form-group">
+                    <label class="font-weight-bold">Teléfono</label>
+                    <p class="form-control-plaintext" th:text="*{telefono}"></p>
+                </div>
+            </div>
+
+            <!-- Contenedor para Actualizar Perfil (inicialmente oculto) -->
+            <div id="formUpdateProfile" class="profile-container card p-4 mb-4 shadow-sm" style="display: none;">
+                <h4 class="mb-3">Actualizar Perfil</h4>
+                <form th:action="@{/actualizar-perfil}" method="post" th:object="${usuarioDto}">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="nombre" class="font-weight-bold">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" th:field="*{nombre}" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="apellidos" class="font-weight-bold">Apellidos</label>
+                            <input type="text" class="form-control" id="apellidos" th:field="*{apellidos}" />
+                        </div>
                     </div>
-
-                    <!-- Correo electrónico -->
                     <div class="form-group">
-                        <label>Correo Electrónico</label>
-                        <p class="form-control"> Correo Electrónico </p>
+                        <label for="cedula" class="font-weight-bold">Cédula</label>
+                        <input type="text" class="form-control" id="cedula" th:field="*{cedula}" />
                     </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="telefono" class="font-weight-bold">Teléfono</label>
+                            <input type="text" class="form-control" id="telefono" th:field="*{telefono}" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="correoElectronico" class="font-weight-bold">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="correoElectronico" th:field="*{correoElectronico}" />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                </form>
+            </div>
 
-                    <!-- Teléfono -->
+            <!-- Contenedor para Actualizar Dirección (inicialmente oculto) -->
+            <div id="formUpdateAddress" class="profile-container card p-4 mb-4 shadow-sm" style="display: none;">
+                <h4 class="mb-3">Actualizar Dirección</h4>
+                <form action="/actualizarDireccion" method="post" th:object="${direccionDto}">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="provincia" class="font-weight-bold">Provincia</label>
+                            <input type="text" class="form-control" id="provincia" th:field="*{provincia}" />
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="canton" class="font-weight-bold">Cantón</label>
+                            <input type="text" class="form-control" id="canton" th:field="*{canton}" />
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="distrito" class="font-weight-bold">Distrito</label>
+                            <input type="text" class="form-control" id="distrito" th:field="*{distrito}" />
+                        </div>
+                    </div>
                     <div class="form-group">
-                        <label>Teléfono</label>
-                        <p class="form-control"> Teléfono </p>
+                        <label for="detalles" class="font-weight-bold">Direccion Exacta</label>
+                        <textarea class="form-control" id="detalles" rows="3" th:field="*{direccionExacta}"></textarea>
                     </div>
-
-                    <!-- Contraseña -->
-                    <div class="form-group">
-                        <label>Contraseña</label>
-                        <p class="form-control"> Contraseña </p>
-                    </div>
-
-
+                    <button type="submit" class="btn btn-primary">Guardar Dirección</button>
+                </form>
             </div>
         </div>
     </div>
@@ -101,11 +140,9 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<!-- Íconos de Font Awesome (para redes sociales), opcional -->
-<script src="https://kit.fontawesome.com/your-fontawesome-kit-code.js" crossorigin="anonymous"></script>
 
-<!-- Bootstrap core JavaScript -->
-<script th:src="@{vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- Script para alternar formularios y marcar el botón seleccionado con la clase active de Bootstrap -->
+<script th:src="@{/js/profile-script.js}"></script>
+<script th:src="@{/js/provincias.js}"></script>
 </body>
 </html>
