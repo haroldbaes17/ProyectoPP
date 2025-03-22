@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -278,8 +279,11 @@ public class UsuarioController {
 
         // 6) Separamos en pedidos pendientes y completados usando stream API
         List<Pedido> pedidosPendientes = pedidosUsuario.stream()
-                .filter(p -> p.getEstado().equalsIgnoreCase("Pendiente")
-                        || p.getEstado().equalsIgnoreCase("Enviado"))
+                .filter(p -> p.getEstado().equalsIgnoreCase("Pendiente"))
+                .collect(Collectors.toList());
+
+        List<Pedido> pedidosEnviados = pedidosUsuario.stream()
+                .filter(p -> p.getEstado().equalsIgnoreCase("Enviado"))
                 .collect(Collectors.toList());
 
         List<Pedido> pedidosCompletados = pedidosUsuario.stream()
@@ -289,9 +293,11 @@ public class UsuarioController {
         // 7) Convertimos cada Pedido a PedidoDto, asignándole los detalles correctos
         List<PedidoDto> pedidosPendientesDto = usuarioService.construirPedidoDtos(pedidosPendientes, detallesPedidos);
         List<PedidoDto> pedidosCompletadosDto = usuarioService.construirPedidoDtos(pedidosCompletados, detallesPedidos);
+        List<PedidoDto> pedidosEnviadosDto = usuarioService.construirPedidoDtos(pedidosEnviados, detallesPedidos);
 
         // 8) Agregamos los datos al modelo
         model.addAttribute("pedidosPendientes", pedidosPendientesDto);
+        model.addAttribute("pedidosEnviados", pedidosEnviadosDto);
         model.addAttribute("pedidosCompletados", pedidosCompletadosDto);
         model.addAttribute("cantidadPedidos", pedidosUsuario.size());
 

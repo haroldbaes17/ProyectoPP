@@ -26,12 +26,11 @@ public class UsuarioService implements UserDetailsService {
         Usuario usuario = usuarioRepository.findByCorreoElectronico(email);
 
         if (usuario != null) {
-            var SpringUser = User.withUsername(usuario.getCorreoElectronico())
+            String role = usuario.isEs_admin() ? "ADMIN" : "USER";
+            return User.withUsername(usuario.getCorreoElectronico())
                     .password(usuario.getPassword())
-                    .roles(usuario.isEs_admin() ? "Admin" : "Usuario")
+                    .roles(role)
                     .build();
-
-            return SpringUser;
         }
 
         return null;

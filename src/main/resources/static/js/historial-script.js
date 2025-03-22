@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function iniciarApp() {
-formatearPrecios()
+    formatearPrecios()
+    formatearFecha()
 }
 
 function formatearPrecios() {
@@ -31,6 +32,21 @@ function formatearPrecios() {
 
             // Actualiza el contenido con "₡ " más el número formateado
             element.textContent = `₡ ${formatted}`;
+        }
+    });
+}
+
+function formatearFecha() {
+    // Selecciona todos los spans que contengan la fecha en formato YYYY-MM-DD
+    const fechaElements = document.querySelectorAll(".fecha-iso");
+
+    fechaElements.forEach(elem => {
+        const fechaTexto = elem.innerText.trim();
+        // Verificamos que cumpla el patrón YYYY-MM-DD
+        if (/^\d{4}-\d{2}-\d{2}$/.test(fechaTexto)) {
+            const [year, month, day] = fechaTexto.split("-");
+            // Reemplazamos el texto con el formato deseado
+            elem.innerText = `${day}-${month}-${year}`;
         }
     });
 }

@@ -37,75 +37,83 @@
       </header>
 
       <!-- Page Features -->
-      <div class="row text-center">
-        <div class="col-lg-3 col-md-6 d-flex align-items-stretch mb-4" th:each="producto : ${productos}">
-          <div class="card h-100 d-flex flex-column">
-            <img class="card-img-top img-fluid mx-auto d-block"
-                 th:src="@{'/images/' + ${producto.imagen}}"
-                 alt="Imagen"
-                 style="height: 250px; object-fit: cover;">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 text-center ">
+            <div class="col mt-4" th:each="producto : ${productos}">
+                <!-- position-relative para que .stretched-link funcione -->
+                <div class="card h-100 d-flex flex-column position-relative">
 
-            <div class="card-body flex-grow-1">
-              <p class="card-text" th:text="${producto.nombre}"></p>
+                    <img class="card-img-top img-fluid mx-auto d-block"
+                         th:src="@{'/images/' + ${producto.imagen}}"
+                         alt="Imagen"
+                         style="height: 250px; object-fit: cover;">
+
+                    <div class="card-body flex-grow-1">
+                        <p class="card-text" th:text="${producto.nombre}"></p>
+                    </div>
+
+                    <div class="card-footer mt-auto">
+                        <!-- No es un <a> para evitar anidar enlaces -->
+                        <span class="btn btn-success mt-auto">Ver producto</span>
+                    </div>
+
+                    <!-- El verdadero enlace, con stretched-link, que vuelve clicable toda la tarjeta -->
+                    <a th:href="@{/ver-producto(id=${producto.id})}" class="stretched-link"></a>
+                </div>
             </div>
-            <div class="card-footer">
-              <a th:href="@{/ver-producto(id=${producto.id})}" class="btn btn-success">Ver producto</a>
-            </div>
-          </div>
         </div>
-      </div>
-      <!-- /.row -->
+
+        <!-- /.row -->
     </div>
 
   <div class="container text-center mt-5">
     <h2 class="fw-bold">CATEGORÍAS</h2>
     <div class="row mt-4">
-      <div class="col-md-3">
-        <div class="category-card" style="background-image: url('img/fotoTemp.webp');">
-          <span>Clubes</span>
-        </div>
-        <p><a href="#">Todos los Clubes →</a></p>
-      </div>
-      <div class="col-md-3">
-        <div class="category-card" style="background-image: url('img/fotoTemp.webp');">
-          <span>Retro</span>
-        </div>
-        <p><a href="#">Retro →</a></p>
-      </div>
-      <div class="col-md-3">
-        <div class="category-card" style="background-image: url('img/fotoTemp.webp');">
-          <span>Niños</span>
-        </div>
-        <p><a href="#">Niños →</a></p>
-      </div>
-      <div class="col-md-3">
-        <div class="category-card" style="background-image: url('img/fotoTemp.webp');">
-          <span>Mujer</span>
-        </div>
-        <p><a href="#">Mujer →</a></p>
-      </div>
-    </div>
-    <div class="row mt-4">
-      <div class="col-md-3">
-        <div class="category-card" style="background-image: url('img/fotoTemp.webp');">
-          <span>Player Version</span>
-        </div>
-        <p><a href="#">Player Version →</a></p>
-      </div>
-      <div class="col-md-3">
-        <div class="category-card" style="background-image: url('img/fotoTemp.webp');">
-          <span>Fan Version</span>
-        </div>
-        <p><a href="#">Fan Version →</a></p>
-      </div>
-      <div class="col-md-3">
-        <a href="#">
-          <div class="category-card" style="background-image: url('img/fotoTemp.webp');">
-            <span>Selecciones</span>
-          </div>
-          <p><a href="#">Selecciones →</a></p>
-      </div>
+
+        <a th:href="@{/categorias/todas-las-camisetas}">
+            <div class="col-md-3">
+                <div class="category-card" style="background-image: url('/img/todaslascamisetas.webp');">
+                    <!--          <span>Todas las Camisetas</span>-->
+                </div>
+                <p><a th:href="@{/categorias/todas-las-camisetas}">Todas las Camisetas →</a></p>
+            </div>
         </a>
+
+        <a th:href="@{/categorias/camisetas-retro}">
+            <div class="col-md-3">
+                <div class="category-card" style="background-image: url('/img/retro.webp');">
+                    <!--          <span>Retro</span>-->
+                </div>
+                <p><a th:href="@{/categorias/camisetas-retro}">Retro →</a></p>
+            </div>
+        </a>
+
+        <a th:href="@{/categorias/camisetas-edicion-especial}">
+            <div class="col-md-3">
+                <div class="category-card" style="background-image: url('/img/Edición-Especial.webp');">
+                    <!--          <span>Edición Especial</span>-->
+                </div>
+                <p><a th:href="@{/categorias/camisetas-edicion-especial}">Edicion Especial →</a></p>
+            </div>
+        </a>
+
+        <a th:href="@{/categorias/selecciones}">
+            <div class="col-md-3">
+                <div class="category-card" style="background-image: url('/img/selecciones.webp');">
+                    <!--          <span>Selecciones</span>-->
+                </div>
+                <p><a href="#">Selecciones →</a></p>
+            </div>
+        </a>
+
+        <a th:href="@{/categorias/clubes}">
+            <div class="col-md-3">
+                <div class="category-card" style="background-image: url('/img/Clubes.webp');">
+                    <!--          <span>Clubes</span>-->
+                </div>
+                <p><a href="#">Clubes →</a></p>
+            </div>
+        </a>
+
     </div>
   </div>
 
@@ -115,8 +123,8 @@
     <div th:insert="~{usuario/template_usuario.html::footer}"></div>
 
   <!-- Bootstrap core JavaScript -->
-  <script th:src="@{vendor/jquery/jquery.min.js}"></script>
-  <script th:src="@{vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+  <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+  <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 
   </body>
 

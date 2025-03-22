@@ -21,9 +21,15 @@ public class SecurityConfig {
                         .ignoringRequestMatchers("/registrarse")
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**").permitAll() // Permitir acceso sin autenticación
-                        //Proteger las rutas al terminar el proyecto
-                        .anyRequest().authenticated()
+                        .requestMatchers("/", "/login", "/registrarse", "/css/**", "/js/**", "/images/**", "/img/**", "/vendor/**", "/buscar-producto", "/ver-producto", "/categorias/**").permitAll() // públicas
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // rutas protegidas para ADMIN
+                        .anyRequest().authenticated() // cualquier otra ruta requiere autenticación
+                )
+                .exceptionHandling(exception -> exception
+                        // Si el usuario no está autenticado, redirige a "/"
+                        .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/"))
+                        // Si el usuario está autenticado pero no tiene permisos (por ejemplo, no es admin), redirige a "/"
+                        .accessDeniedHandler((request, response, accessDeniedException) -> response.sendRedirect("/"))
                 )
                 .formLogin(form -> form.disable())
                 .logout(config -> config.logoutUrl("/logout").logoutSuccessUrl("/"))

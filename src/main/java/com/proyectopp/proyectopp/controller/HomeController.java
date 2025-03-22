@@ -44,9 +44,8 @@ public class HomeController {
     private ProductoRepository productoRepository;
 
     @GetMapping("")
-    public String home(Model model, HttpSession session) {
-        model.addAttribute("productos", repository.findAll());
-//        log.info("session: " + session.getAttribute("idUsuario"));
+    public String home(Model model) {
+        model.addAttribute("productos", repository.findRandomProductos());
 
         return "usuario/home";
     }
@@ -238,10 +237,10 @@ public class HomeController {
 //        log.info("Nombre: " + nombre);
 
         List<Producto> productos = productoRepository.findAll().stream()
-                .filter(p -> p.getNombre().contains(nombre)).collect(Collectors.toList());
+                .filter(p -> p.getNombre().toLowerCase().contains(nombre.toLowerCase()))
+                .collect(Collectors.toList());
 
         model.addAttribute("productos", productos);
         return "usuario/home";
     }
-
 }

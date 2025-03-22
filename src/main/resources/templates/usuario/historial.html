@@ -37,7 +37,7 @@
         </div>
 
         <!-- Sección de Pedidos Pendientes -->
-        <section th:if="${pedidosPendientes.size() > 0}">
+        <section th:if="${cantidadPedidos > 0}">
             <h4 class="mb-3 text-primary">
                 <i class="bi bi-hourglass-split me-2"></i>
                 Pedidos Pendientes
@@ -48,7 +48,7 @@
                         <div>
                             <i class="bi bi-calendar3 me-1"></i>
                             <strong>Fecha:</strong>
-                            <span th:text="${pedido.fecha}">2025-03-17</span>
+                            <span class="fecha-iso" th:text="${pedido.fecha}">2025-03-17</span>
                         </div>
                         <div>
                             <i class="bi bi-cash-coin me-1"></i>
@@ -61,7 +61,7 @@
                             <span class="currency-format" th:text="'₡ ' + ${pedido.total}"></span>
                         </div>
                         <div>
-                            <span class="badge badge-warning px-3 py-2" th:text="${pedido.estado}">Pendiente</span>
+                            <span class="badge badge-danger px-3 py-2" th:text="${pedido.estado}"></span>
                         </div>
                     </div>
                     <div class="card-body">
@@ -95,6 +95,79 @@
             </div> <!-- fin each pedido pendiente -->
         </section>
 
+        <!-- Mensaje si hay pedidos en general pero no pendientes -->
+        <div th:if="${pedidosPendientes.isEmpty() and cantidadPedidos > 0}"
+             class="alert alert-info text-center" role="alert">
+            <i class="bi bi-clipboard-x-fill me-2"></i>
+            <strong>No tienes pedidos pendientes.</strong>
+        </div>
+
+        <!-- Sección de Pedidos Enviados (NUEVA) -->
+        <section th:if="${cantidadPedidos > 0}">
+            <h4 class="mb-3 text-warning">
+                <i class="bi bi-truck me-2"></i>
+                Pedidos Enviados
+            </h4>
+            <div th:each="pedido : ${pedidosEnviados}" class="mb-4">
+                <div class="card">
+                    <div class="card-header d-flex flex-wrap justify-content-between align-items-center bg-light">
+                        <div>
+                            <i class="bi bi-calendar3 me-1"></i>
+                            <strong>Fecha:</strong>
+                            <span class="fecha-iso" th:text="${pedido.fecha}"></span>
+                        </div>
+                        <div>
+                            <i class="bi bi-cash-coin me-1"></i>
+                            <strong>Subtotal:</strong>
+                            <span class="currency-format" th:text="'₡ ' + ${pedido.subtotal}"></span>
+                        </div>
+                        <div>
+                            <i class="bi bi-credit-card-2-back me-1"></i>
+                            <strong>Total:</strong>
+                            <span class="currency-format" th:text="'₡ ' + ${pedido.total}"></span>
+                        </div>
+                        <div>
+                            <span class="badge badge-warning px-3 py-2" th:text="${pedido.estado}">Enviado</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th>Imagen</th>
+                                    <th>Producto</th>
+                                    <th>Precio</th>
+                                    <th>Talla</th>
+                                    <th>Cantidad</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="detalle : ${pedido.detalles}">
+                                    <td style="width: 80px;">
+                                        <img th:src="@{'/images/' + ${detalle.producto.imagen}}"
+                                             alt="Producto" class="img-fluid rounded" style="max-width: 60px;">
+                                    </td>
+                                    <td th:text="${detalle.producto.nombre}">Producto</td>
+                                    <td class="currency-format" th:text="'₡ ' + ${detalle.producto.precio}">₡ 0</td>
+                                    <td th:text="${detalle.talla}">Talla</td>
+                                    <td th:text="${detalle.cantidad}">0</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- fin table-responsive -->
+                    </div> <!-- fin card-body -->
+                </div> <!-- fin card -->
+            </div> <!-- fin each pedido enviado -->
+        </section>
+
+        <!-- Mensaje si hay pedidos en general pero no enviados -->
+        <div th:if="${pedidosEnviados.isEmpty() and cantidadPedidos > 0}"
+             class="alert alert-info text-center" role="alert">
+            <i class="bi bi-clipboard-x-fill me-2"></i>
+            <strong>No tienes pedidos enviados.</strong>
+        </div>
+
         <!-- Sección de Pedidos Completados -->
         <section th:if="${cantidadPedidos > 0}" >
             <h4 class="mb-3 text-success">
@@ -107,7 +180,7 @@
                         <div>
                             <i class="bi bi-calendar3 me-1"></i>
                             <strong>Fecha:</strong>
-                            <span th:text="${pedido.fecha}"></span>
+                            <span class="fecha-iso" th:text="${pedido.fecha}"></span>
                         </div>
                         <div>
                             <i class="bi bi-cash-coin me-1"></i>
@@ -158,7 +231,7 @@
         <div th:if="${pedidosCompletados.isEmpty() and cantidadPedidos > 0}"
              class="alert alert-info text-center" role="alert">
             <i class="bi bi-clipboard-x-fill me-2"></i>
-            <strong>No tienes pedidos completados aún.</strong>
+            <strong>No tienes pedidos completados.</strong>
         </div>
     </div>
 </div>
