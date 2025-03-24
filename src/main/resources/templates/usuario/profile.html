@@ -7,12 +7,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Spring eCommerce</title>
+
+    <title>TicoTees Store - Costa Rica</title>
+
+    <link rel="icon" type="image/png" th:href="@{/img/icono.png}" />
     <!-- Bootstrap core CSS -->
     <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link th:href="@{/css/heroic-features.css}" rel="stylesheet">
     <link th:href="@{/css/styles-profile.css}" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body class="d-flex flex-column min-vh-100">
 <!-- Navigation -->
@@ -26,26 +32,38 @@
                 <!-- Imagen de perfil (avatar) -->
                 <img th:src="@{/img/avatar.png}" alt="Foto de perfil" class="profile-avatar mb-3">
                 <!-- Nombre y alias del usuario -->
-                <h3 class="profile-name mb-0" th:text="*{usuarioDto.nombre} + ' ' + *{usuarioDto.apellidos}"></h3>
+                <h3 class="profile-name mb-0">
+                    <i class="bi bi-person-circle me-2"></i>
+                    <span th:text="*{usuarioDto.nombre} + ' ' + *{usuarioDto.apellidos}"></span>
+                </h3>
                 <!-- Estadísticas (ejemplo) -->
                 <div class="profile-stats mt-3">
                     <div class="stat-item">
-                        <strong>Compras:</strong> <span th:text="*{cantidadPedidos}"></span>
+                        <i class="bi bi-bag-fill me-1"></i><strong> Compras:</strong> <span th:text="*{cantidadPedidos}"></span>
                     </div>
                     <div class="stat-item">
-                        <strong>En carrito:</strong> <span th:text="*{cantidadCarrito}"></span>
+                        <i class="bi bi-cart-fill me-1"></i><strong> En carrito:</strong> <span th:text="*{cantidadCarrito}"></span>
                     </div>
                 </div>
             </div>
+
             <!-- Sección de acciones -->
             <div class="profile-actions card p-3 shadow-sm">
                 <h5>Acciones</h5>
                 <hr>
                 <div class="btn-group-vertical w-100" role="group">
-                    <button id="btnUserInfo" class="btn btn-outline-primary mb-3">Información de Usuario</button>
-                    <button id="btnUpdateProfile" class="btn btn-outline-success mb-3">Actualizar Perfil</button>
-                    <button id="btnUpdateAddress" class="btn btn-outline-secondary">Actualizar Dirección</button>
-                    <a th:href="@{/historial}" class="btn btn-outline-info mt-3" >Historial de Pedidos</a>
+                    <button id="btnUserInfo" class="btn btn-outline-primary mb-3">
+                        <i class="bi bi-info-circle me-2"></i> Información de Usuario
+                    </button>
+                    <button id="btnUpdateProfile" class="btn btn-outline-success mb-3">
+                        <i class="bi bi-pencil-square me-2"></i> Actualizar Perfil
+                    </button>
+                    <button id="btnUpdateAddress" class="btn btn-outline-secondary">
+                        <i class="bi bi-geo-alt-fill me-2"></i> Actualizar Dirección
+                    </button>
+                    <a th:href="@{/historial}" class="btn btn-outline-info mt-3">
+                        <i class="bi bi-clock-history me-2"></i> Historial de Pedidos
+                    </a>
                 </div>
             </div>
         </div>
@@ -54,7 +72,7 @@
         <div class="col-md-8">
             <!-- Contenedor para Información de Usuario -->
             <div id="formUserInfo" class="profile-container card p-4 mb-4 shadow-sm" th:object="${usuarioDto}">
-                <h4 class="mb-3">Información de la Cuenta</h4>
+                <h4 class="mb-3"><i class="bi bi-person-badge-fill me-2"></i>Información de la Cuenta</h4>
                 <!-- Cédula -->
                 <div class="form-group">
                     <label class="font-weight-bold">Cédula</label>
@@ -74,7 +92,7 @@
 
             <!-- Contenedor para Actualizar Perfil (inicialmente oculto) -->
             <div id="formUpdateProfile" class="profile-container card p-4 mb-4 shadow-sm" style="display: none;">
-                <h4 class="mb-3">Actualizar Perfil</h4>
+                <h4 class="mb-3"><i class="bi bi-pencil-fill me-2"></i>Actualizar Perfil</h4>
                 <form th:action="@{/actualizar-perfil}" method="post" th:object="${usuarioDto}">
                     <div class="form-row">
                         <div class="form-group col-md-6">
@@ -100,13 +118,15 @@
                             <input type="email" class="form-control" id="correoElectronico" th:field="*{correoElectronico}" />
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle-fill me-2"></i> Guardar Cambios
+                    </button>
                 </form>
             </div>
 
             <!-- Contenedor para Actualizar Dirección (inicialmente oculto) -->
             <div id="formUpdateAddress" class="profile-container card p-4 mb-4 shadow-sm" style="display: none;">
-                <h4 class="mb-3">Actualizar Dirección</h4>
+                <h4 class="mb-3"><i class="bi bi-geo-alt-fill me-2"></i>Actualizar Dirección</h4>
                 <form action="/actualizarDireccion" method="post" th:object="${direccionDto}">
                     <div class="form-row">
                         <div class="form-group col-md-4">
@@ -126,7 +146,9 @@
                         <label for="detalles" class="font-weight-bold">Direccion Exacta</label>
                         <textarea class="form-control" id="detalles" rows="3" th:field="*{direccionExacta}"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Guardar Dirección</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle-fill me-2"></i> Guardar Dirección
+                    </button>
                 </form>
             </div>
         </div>

@@ -59,7 +59,7 @@ public class CategoriasController {
             Model model
     ) {
         List<Producto> selecciones = productoRepository.findAll().stream()
-                .filter(p -> p.getNombre().toLowerCase().contains("seleccion"))
+                .filter(p -> p.getTipoEquipo().equalsIgnoreCase("seleccion"))
                 .collect(Collectors.toList());
 
         model.addAttribute("productos", selecciones);
@@ -72,7 +72,7 @@ public class CategoriasController {
             Model model
     ) {
         List<Producto> clubes = productoRepository.findAll().stream()
-                .filter(p -> !p.getNombre().toLowerCase().contains("seleccion"))
+                .filter(p -> p.getTipoEquipo().equalsIgnoreCase("club"))
                 .collect(Collectors.toList());
 
         model.addAttribute("productos", clubes);

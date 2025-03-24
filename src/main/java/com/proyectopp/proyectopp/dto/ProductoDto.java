@@ -1,5 +1,6 @@
 package com.proyectopp.proyectopp.dto;
 
+import com.proyectopp.proyectopp.model.StockTallas;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -7,6 +8,8 @@ import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductoDto {
 
@@ -24,6 +27,9 @@ public class ProductoDto {
 
     @Min(1)
     private int stockTotal;
+
+    private List<StockTallas> stockTallas = new ArrayList<>();
+// + getters y setters
 
     @NotEmpty(message = "Este campo es requerido*")
     private String tipoEquipacion;
@@ -45,6 +51,8 @@ public class ProductoDto {
 
     @Size(min = 10, max = 2000, message = "La descripción debe tener entre 10 y 2000 caracteres")
     private String descripcion;
+
+    private String tipoEquipo;
 
     // Getters y Setters
     public String getNombre() {
@@ -85,6 +93,14 @@ public class ProductoDto {
 
     public void setStockTotal(int stockTotal) {
         this.stockTotal = stockTotal;
+    }
+
+    public List<StockTallas> getStockTallas() {
+        return stockTallas;
+    }
+
+    public void setStockTallas(List<StockTallas> stockTallas) {
+        this.stockTallas = stockTallas;
     }
 
     public String getTipoEquipacion() {
@@ -143,6 +159,10 @@ public class ProductoDto {
         this.descripcion = descripcion;
     }
 
+    public String getTipoEquipo() {
+        return tipoEquipo;
+    }
+
     @Override
     public String toString() {
         return "ProductoDto{" +
@@ -151,6 +171,7 @@ public class ProductoDto {
                 ", precio=" + precio +
                 ", imagen=" + imagen +
                 ", stockTotal=" + stockTotal +
+                ", stockTallas=" + stockTallas +
                 ", tipoEquipacion='" + tipoEquipacion + '\'' +
                 ", liga='" + liga + '\'' +
                 ", pais='" + pais + '\'' +
@@ -158,6 +179,12 @@ public class ProductoDto {
                 ", edicionEspecial=" + edicionEspecial +
                 ", esRetro=" + esRetro +
                 ", descripcion='" + descripcion + '\'' +
+                ", tipoEquipo='" + tipoEquipo + '\'' +
                 '}';
     }
+
+    public void setTipoEquipo(String tipoEquipo) {
+        this.tipoEquipo = tipoEquipo;
+    }
+
 }

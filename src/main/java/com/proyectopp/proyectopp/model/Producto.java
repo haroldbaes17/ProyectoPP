@@ -49,6 +49,9 @@ public class Producto {
     @Column(name = "descripcion", columnDefinition = "TEXT", nullable = false)
     private String descripcion;
 
+    @Column(name = "tipo_equipo", length = 40, nullable = false)
+    private String tipoEquipo;
+
 
     public int getId() {
         return id;
@@ -154,6 +157,14 @@ public class Producto {
         this.descripcion = descripcion;
     }
 
+    public String getTipoEquipo() {
+        return tipoEquipo;
+    }
+
+    public void setTipoEquipo(String tipoEquipo) {
+        this.tipoEquipo = tipoEquipo;
+    }
+
     @Override
     public String toString() {
         return "Producto{" +
@@ -170,6 +181,7 @@ public class Producto {
                 ", edicionEspecial=" + edicionEspecial +
                 ", esRetro=" + esRetro +
                 ", descripcion='" + descripcion + '\'' +
+                ", tipoEquipo='" + tipoEquipo + '\'' +
                 '}';
     }
 }

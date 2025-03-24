@@ -8,7 +8,9 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Spring eCommerce</title>
+  <title>TicoTees Store - Costa Rica</title>
+
+  <link rel="icon" type="image/png" th:href="@{/img/icono.png}" />
 
 
   <!-- Bootstrap core CSS -->
@@ -63,6 +65,20 @@
           </div>
         </div>
 
+        <!-- Nuevo select de Tipo de Equipo -->
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="tipoEquipo">Tipo de Equipo:</label>
+          <div class="col-sm-10">
+            <select th:field="*{tipoEquipo}" id="tipoEquipo" class="form-control">
+              <option value="" hidden>-- Seleccione el tipo de equipo --</option>
+              <option value="Club">Club</option>
+              <option value="Seleccion">Selección</option>
+            </select>
+            <p th:if="${#fields.hasErrors('tipoEquipo')}" th:errorclass="text-danger"
+               th:errors="${productoDto.tipoEquipo}"></p>
+          </div>
+        </div>
+
         <div class="form-group">
           <label class="control-label col-sm-2" for="precio">Precio:</label>
           <div class="col-sm-10">
@@ -95,6 +111,46 @@
                    placeholder="Ingrese el stock total del producto" autocomplete="off" required min="0">
             <p th:if="${#fields.hasErrors('stockTotal')}" th:errorclass="text-danger"
                th:errors="${productoDto.stockTotal}"></p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-sm-2">Stock por talla:</label>
+          <div class="col-sm-10">
+            <!-- row + g-3 = fila con gap -->
+            <div class="row g-3 align-items-end">
+
+              <!-- Recorremos la lista stockTallas: cada "stock" es una columna -->
+              <div class="col-auto" th:each="stock, idx : *{stockTallas}">
+
+                <!-- Etiqueta (por ejemplo, S, M, L...) -->
+                <label th:text="${stock.talla}"></label>
+
+                <!-- Campo oculto para la talla, para que se envíe en el form -->
+                <input type="hidden"
+                       th:field="*{stockTallas[__${idx.index}__].talla}" />
+
+                <!-- Input para la cantidad -->
+                <input type="number"
+                       class="form-control"
+                       th:field="*{stockTallas[__${idx.index}__].cantidad}"
+                       min="0"
+                       placeholder="0" />
+
+                <!-- Errores de validación, si los hubiera -->
+                <p th:if="${#fields.hasErrors('stockTallas[' + idx.index + '].cantidad')}"
+                   th:errorclass="text-danger"
+                   th:errors="*{stockTallas[__${idx.index}__].cantidad}">
+                </p>
+              </div>
+
+            </div>
+
+            <!-- Mensaje aclaratorio -->
+            <small class="form-text text-muted">
+              La cantidad de stock total y la suma de los stock de tallas deben ser iguales.
+            </small>
+
           </div>
         </div>
 

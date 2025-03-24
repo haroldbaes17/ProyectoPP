@@ -2,7 +2,9 @@ package com.proyectopp.proyectopp.controller;
 
 import com.proyectopp.proyectopp.dto.ProductoDto;
 import com.proyectopp.proyectopp.model.Producto;
+import com.proyectopp.proyectopp.model.StockTallas;
 import com.proyectopp.proyectopp.repository.ProductoRepository;
+import com.proyectopp.proyectopp.repository.StockTallasRepository;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin/productos")
@@ -31,6 +35,9 @@ public class ProductoController {
 
     @Autowired
     private ProductoRepository repository;
+
+    @Autowired
+    private StockTallasRepository stockTallasRepository;
 
     @GetMapping({"/", ""})
     public String show(
@@ -44,6 +51,15 @@ public class ProductoController {
     @GetMapping("/crear")
     public String create(Model model) {
         ProductoDto productoDto = new ProductoDto();
+
+        List<String> tallas = List.of("S","M","L","XL","2XL");
+        for (String t : tallas) {
+            StockTallas st = new StockTallas();
+            st.setTalla(t);
+            st.setCantidad(0);
+            productoDto.getStockTallas().add(st);
+        }
+
         model.addAttribute("productoDto", productoDto);
         return "/admin/productos/create";
     }
@@ -93,10 +109,34 @@ public class ProductoController {
         producto.setEdicionEspecial(productoDto.getEdicionEspecial());
         producto.setEsRetro(productoDto.getEsRetro());
         producto.setDescripcion(productoDto.getDescripcion());
+        producto.setTipoEquipo(productoDto.getTipoEquipo());
+
+        //Apartado para guardar el stock de las tallas
+        int sumaTallas = productoDto.getStockTallas()
+                .stream()
+                .mapToInt(StockTallas::getCantidad)
+                .sum();
+
+        if (productoDto.getStockTotal() != (sumaTallas)) {
+            result.addError(new FieldError(
+                    "productoDto",
+                    "stockTotal",
+                    "El stock total y la suma de tallas no coinciden"
+            ));
+            return "/admin/productos/create";
+        }
 
         repository.save(producto);
-        redirectAttributes.addFlashAttribute("successCreate", true);
 
+        for (StockTallas st : productoDto.getStockTallas()) {
+            st.setProducto(producto);
+            st.setTalla(st.getTalla());
+            st.setCantidad(st.getCantidad());
+
+            stockTallasRepository.save(st);
+        }
+
+        redirectAttributes.addFlashAttribute("successCreate", true);
         return "redirect:/admin/productos";
     }
 
@@ -104,10 +144,12 @@ public class ProductoController {
     public String modificar(Model model, @RequestParam int id) {
 
         try {
-            Producto producto = repository.findById(id).get();
+            // Obtenemos el producto por su id
+            Producto producto = repository.findById(id)
+                    .orElseThrow(() -> new Exception("Producto no encontrado"));
             model.addAttribute("producto", producto);
-//            LOGGER.info("Producto Buscado: {}", producto);
 
+            // Inicializamos el DTO y seteamos los datos básicos del producto
             ProductoDto productoDto = new ProductoDto();
             productoDto.setNombre(producto.getNombre());
             productoDto.setEquipo(producto.getEquipo());
@@ -120,7 +162,25 @@ public class ProductoController {
             productoDto.setEdicionEspecial(producto.isEdicionEspecial());
             productoDto.setEsRetro(producto.isEsRetro());
             productoDto.setDescripcion(producto.getDescripcion());
+            productoDto.setTipoEquipo(producto.getTipoEquipo());
 
+            // Obtenemos la lista de stock por talla para este producto desde la BD
+            List<StockTallas> stockList = stockTallasRepository.findByProducto(producto);
+            if (stockList == null || stockList.isEmpty()) {
+                // Si no existe stock para este producto, se inicializa la lista con tallas predeterminadas y cantidad 0
+                List<String> tallas = List.of("S", "M", "L", "XL", "2XL");
+                for (String t : tallas) {
+                    StockTallas st = new StockTallas();
+                    st.setTalla(t);
+                    st.setCantidad(0);
+                    productoDto.getStockTallas().add(st);
+                }
+            } else {
+                // Si ya existe el stock, se asigna la lista al DTO
+                productoDto.setStockTallas(stockList);
+            }
+
+            // Se envía el DTO a la vista
             model.addAttribute("productoDto", productoDto);
         } catch (Exception e) {
             System.out.println("Exception: " + e.getMessage());
@@ -129,6 +189,7 @@ public class ProductoController {
 
         return "admin/productos/edit";
     }
+
 
     @PostMapping("/modificar")
     public String edit(Model model, @RequestParam int id, @Valid @ModelAttribute ProductoDto productoDto, BindingResult result, RedirectAttributes redirectAttributes) {
@@ -176,8 +237,47 @@ public class ProductoController {
             producto.setEdicionEspecial(productoDto.getEdicionEspecial());
             producto.setEsRetro(productoDto.getEsRetro());
             producto.setDescripcion(productoDto.getDescripcion());
+            producto.setTipoEquipo(productoDto.getTipoEquipo());
+
+            //Apartado para guardar el stock de las tallas
+            int sumaTallas = productoDto.getStockTallas()
+                    .stream()
+                    .mapToInt(StockTallas::getCantidad)
+                    .sum();
+
+            if (productoDto.getStockTotal() != (sumaTallas)) {
+                result.addError(new FieldError(
+                        "productoDto",
+                        "stockTotal",
+                        "El stock total y la suma de tallas no coinciden"
+                ));
+                return "/admin/productos/edit";
+            }
 
             repository.save(producto);
+
+            List<StockTallas> stockList = stockTallasRepository.findByProducto(producto);
+            List<StockTallas> stockDtoList = productoDto.getStockTallas();
+
+            if (stockList == null || stockList.isEmpty()) {
+                // Si no existe stock por tallas para este producto, se crean nuevos registros.
+                for (StockTallas stDto : stockDtoList) {
+                    stDto.setProducto(producto);  // Se asocia el producto al stock
+                    stockTallasRepository.save(stDto);
+                }
+            } else {
+                // Si ya existen registros, se actualizan aquellos que coincidan con la talla enviada
+                Map<String, Integer> dtoStockMap = stockDtoList.stream()
+                        .collect(Collectors.toMap(StockTallas::getTalla, StockTallas::getCantidad));
+
+                for (StockTallas st : stockList) {
+                    if (dtoStockMap.containsKey(st.getTalla())) {
+                        st.setCantidad(dtoStockMap.get(st.getTalla()));
+                        stockTallasRepository.save(st);
+                    }
+                }
+            }
+
             redirectAttributes.addFlashAttribute("successUpdate", true);
 
         } catch (Exception e) {
@@ -194,14 +294,23 @@ public class ProductoController {
         try {
             Producto producto = repository.findById(id).get();
 
-            //Delete product image
-            Path imagePath = Paths.get("public/images/" + producto.getImagen());
+            // Eliminar stock por tallas asociado al producto
+            List<StockTallas> stockList = stockTallasRepository.findByProducto(producto);
+            if (stockList != null && !stockList.isEmpty()) {
+                for (StockTallas stock : stockList) {
+                    stockTallasRepository.delete(stock);
+                }
+            }
 
+            // Eliminar imagen del producto
+            Path imagePath = Paths.get("public/images/" + producto.getImagen());
             try {
                 Files.delete(imagePath);
             } catch (Exception e) {
                 System.out.println("Exception: " + e.getMessage());
             }
+
+            // Eliminar el producto
             repository.delete(producto);
             redirectAttributes.addFlashAttribute("successDelete", true);
 
@@ -211,5 +320,6 @@ public class ProductoController {
 
         return "redirect:/admin/productos";
     }
+
 
 }

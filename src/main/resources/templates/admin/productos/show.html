@@ -8,7 +8,9 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Spring eCommerce</title>
+  <title>TicoTees Store - Costa Rica</title>
+
+  <link rel="icon" type="image/png" th:href="@{/img/icono.png}" />
 
 
   <!-- Bootstrap core CSS -->
@@ -63,6 +65,7 @@
           <th scope="col">ID</th>
           <th scope="col">Nombre</th>
           <th scope="col">Equipo</th>
+          <th scope="col">Tipo Equipo</th>
           <th scope="col">Precio</th>
           <th scope="col">Imagen</th>
           <th scope="col">Stock Total</th>
@@ -82,6 +85,7 @@
           <td th:text="${producto.id}"></td>
           <td th:text="${producto.nombre}"></td>
           <td th:text="${producto.equipo}"></td>
+          <td th:text="${producto.tipoEquipo}"></td>
           <td th:text="@{'₡' + ${producto.precio}}"></td>
           <td>
             <img th:src="@{'/images/' + ${producto.imagen}}"

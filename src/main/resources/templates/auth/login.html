@@ -3,14 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Spring eCommerce - Ingresar</title>
+
+  <title>TicoTees Store - Costa Rica</title>
+
+  <link rel="icon" type="image/png" th:href="@{/img/icono.png}" />
 
   <!-- Bootstrap core CSS -->
   <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
 
-  <!-- Estilos personalizados (puedes renombrar el archivo a tu gusto) -->
+  <!-- Estilos personalizados -->
   <link th:href="@{/css/styles-login.css}" rel="stylesheet">
 
+  <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
 </head>
@@ -25,12 +29,18 @@
   <div class="col-md-6">
     <div class="card shadow-lg">
       <div class="card-header bg-dark text-white text-center">
-        <h2 class="mb-0">Ingresar</h2>
+        <h2 class="mb-0">
+          <!-- Ícono en el título -->
+          <i class="bi bi-box-arrow-in-right me-2"></i> Ingresar
+        </h2>
       </div>
       <div class="card-body p-4">
         <form th:action="@{/login}" method="post" th:object="${loginDto}">
           <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
+            <label for="email" class="form-label">
+              <!-- Ícono en el label de Email -->
+              <i class="bi bi-envelope-fill me-2"></i> Email
+            </label>
             <input
                     type="email"
                     class="form-control"
@@ -43,10 +53,14 @@
             >
             <p th:if="${#fields.hasErrors('correoElectronico')}"
                th:errorclass="text-danger"
-               th:errors="*{correoElectronico}" ></p>
+               th:errors="*{correoElectronico}"></p>
           </div>
+
           <div class="mb-3">
-            <label for="password" class="form-label">Contraseña</label>
+            <label for="password" class="form-label">
+              <!-- Ícono en el label de Contraseña -->
+              <i class="bi bi-lock-fill me-2"></i> Contraseña
+            </label>
             <div class="input-group">
               <input
                       type="password"
@@ -64,20 +78,26 @@
             </div>
             <p th:if="${#fields.hasErrors('password')}"
                th:errorclass="text-danger"
-               th:errors="*{password}" ></p>
+               th:errors="*{password}"></p>
           </div>
+
           <div class="d-flex justify-content-center align-items-center">
+            <!-- Ícono en el botón de Ingresar -->
             <button type="submit" class="btn btn-dark btn-lg">
-              Ingresar
+              <i class="bi bi-door-open-fill me-2"></i> Ingresar
             </button>
           </div>
         </form>
+
         <div class="text-center mt-3">
+          <!-- Ícono en el enlace de Registro -->
           <a th:href="@{/registrarse}" class="card-link">
-            ¿No tienes cuenta? Regístrate aquí
+            <i class="bi bi-person-plus-fill me-1"></i> ¿No tienes cuenta? Regístrate aquí
           </a>
+          <br>
+          <!-- Ícono en el enlace de Recuperar contraseña -->
           <a th:href="@{/olvide-password}" class="card-link">
-            Olvidé mi contraseña
+            <i class="bi bi-question-circle-fill me-1"></i> Olvidé mi contraseña
           </a>
         </div>
       </div>
