@@ -69,4 +69,6 @@ public class UsuarioService implements UserDetailsService {
         return resultado;
     }
 
+    
+
 }

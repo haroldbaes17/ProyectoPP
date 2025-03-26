@@ -243,4 +243,9 @@ public class HomeController {
         model.addAttribute("productos", productos);
         return "usuario/home";
     }
+
+    @GetMapping("/error")
+    public String error() {
+        return "error";
+    }
 }

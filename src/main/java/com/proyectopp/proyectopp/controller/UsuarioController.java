@@ -7,6 +7,7 @@ import com.proyectopp.proyectopp.model.Usuario;
 import com.proyectopp.proyectopp.repository.DetallePedidoRepository;
 import com.proyectopp.proyectopp.repository.PedidoRepository;
 import com.proyectopp.proyectopp.repository.UsuarioRepository;
+import com.proyectopp.proyectopp.service.EmailService;
 import com.proyectopp.proyectopp.service.UsuarioService;
 import com.proyectopp.proyectopp.utils.TokenGenerator;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,19 +18,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
@@ -51,6 +48,9 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService service;
+
+    @Autowired
+    private EmailService emailService;
 
     Logger log = LoggerFactory.getLogger(UsuarioController.class);
     @Autowired
@@ -115,6 +115,10 @@ public class UsuarioController {
 
             repository.save(newUsuario);
 
+            // Generar el enlace de verificación (ajusta el dominio y puerto según corresponda)
+            String confirmationLink = "http://localhost:8080/verificar-cuenta?token=" + newUsuario.getToken();
+            emailService.sendConfirmatioEmail(newUsuario.getCorreoElectronico(), "Confirmación de cuenta", confirmationLink);
+
             model.addAttribute("usuarioDto", new UsuarioDto());
             model.addAttribute("succes", true);
 
@@ -154,6 +158,12 @@ public class UsuarioController {
             result.addError (
                     new FieldError("loginDto", "correoElectronico", "No encontramos tu usuario")
             );
+            return "auth/login";
+        }
+
+        // Verificar si la cuenta está confirmada
+        if (!usuario.isConfirmado()) {
+            result.addError(new ObjectError("loginDto", "Tu cuenta no ha sido confirmada. Por favor, revisa tu correo electrónico para activar tu cuenta."));
             return "auth/login";
         }
 
@@ -304,6 +314,34 @@ public class UsuarioController {
 
         return "usuario/historial";
     }
+
+    @GetMapping("/mensaje")
+    public String mensaje() {
+
+        return "auth/mensaje";
+    }
+
+    @GetMapping("/verificar-cuenta")
+    public String verificarCuenta(
+            Model model,
+            HttpSession session,
+            @RequestParam String token,
+            RedirectAttributes redirectAttributes
+    ) {
+        Usuario usuario = repository.findByToken(token);
+
+        if (usuario != null) {
+            usuario.setConfirmado(true);
+            usuario.setToken(null);
+            repository.save(usuario);
+            return "redirect:/login";
+        }
+
+        redirectAttributes.addFlashAttribute("error", "true");
+        return "redirect:/error";
+
+    }
+
 
 
 }

@@ -36,6 +36,17 @@
       </div>
       <div class="card-body p-4">
         <form th:action="@{/login}" method="post" th:object="${loginDto}">
+
+          <!-- Bloque para mostrar errores globales -->
+          <div th:if="${#fields.hasGlobalErrors()}" class="mb-3">
+            <div class="alert alert-danger" role="alert">
+              <ul class="mb-0">
+                <li th:each="err : ${#fields.globalErrors()}" th:text="${err}"></li>
+              </ul>
+            </div>
+          </div>
+
+
           <div class="mb-3">
             <label for="email" class="form-label">
               <!-- Ícono en el label de Email -->
