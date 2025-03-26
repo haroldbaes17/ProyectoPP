@@ -21,7 +21,8 @@ public class SecurityConfig {
                         .ignoringRequestMatchers("/registrarse")
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/registrarse", "/css/**", "/js/**", "/images/**", "/img/**", "/vendor/**", "/buscar-producto", "/ver-producto", "/categorias/**", "/mensaje", "/error", "/verificar-cuenta").permitAll() // públicas
+                        .requestMatchers("/", "/login", "/registrarse", "/css/**", "/js/**", "/images/**", "/img/**", "/vendor/**", "/buscar-producto", "/ver-producto", "/categorias/**", "/mensaje", "/error", "/verificar-cuenta", "/olvide-password", "/reestablecer-password").permitAll() // públicas
+
                         .requestMatchers("/admin/**").hasRole("ADMIN") // rutas protegidas para ADMIN
                         .anyRequest().authenticated() // cualquier otra ruta requiere autenticación
                 )

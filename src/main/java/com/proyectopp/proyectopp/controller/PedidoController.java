@@ -3,6 +3,9 @@ package com.proyectopp.proyectopp.controller;
 import com.proyectopp.proyectopp.dto.DireccionDto;
 import com.proyectopp.proyectopp.dto.PedidoDto;
 import com.proyectopp.proyectopp.dto.UsuarioDto;
+import com.proyectopp.proyectopp.model.DetallePedido;
+import com.proyectopp.proyectopp.repository.ProductoRepository;
+import com.proyectopp.proyectopp.repository.UsuarioRepository;
 import com.proyectopp.proyectopp.service.PedidoService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -13,6 +16,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
+
 @Controller
 public class PedidoController {
 
@@ -20,7 +25,6 @@ public class PedidoController {
 
     @Autowired
     PedidoService pedidoService;
-
 
     @PostMapping("/procesar-pedido")
     public String savePedido(

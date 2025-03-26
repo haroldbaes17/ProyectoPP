@@ -46,6 +46,13 @@
             </div>
           </div>
 
+          <!-- Alert de Bootstrap (opcional: con botón de cierre) -->
+          <div th:if="${param.passwordChanged}"
+               class="alert alert-success alert-dismissible fade show text-center"
+               role="alert">
+            ¡Ha cambiado la contraseña exitosamente!
+          </div>
+
 
           <div class="mb-3">
             <label for="email" class="form-label">

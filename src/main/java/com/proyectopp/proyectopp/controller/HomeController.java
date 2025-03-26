@@ -93,8 +93,7 @@ public class HomeController {
     public String addCart(
             Model model,
             @Valid @ModelAttribute CarritoDto carritoDto,
-            BindingResult result,
-            RedirectAttributes redirectAttributes
+            BindingResult result
             ) {
 
         Producto producto = repository.findById(carritoDto.getIdProducto()).get();
@@ -247,5 +246,13 @@ public class HomeController {
     @GetMapping("/error")
     public String error() {
         return "error";
+    }
+
+    @GetMapping("/olvide-password")
+    public String forgotPassword(Model model) {
+        LoginDto loginDto = new LoginDto();
+
+        model.addAttribute("loginDto", loginDto);
+        return "auth/perdiPassword";
     }
 }

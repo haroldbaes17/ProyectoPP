@@ -57,6 +57,81 @@ public class EmailService {
         sendEmail(to, subject, content);
     }
 
+    public void sendResetPasswordEmail(String to, String subject, String resetLink) {
+        String content = "<html>" +
+                "<head>" +
+                "    <style>" +
+                "        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }" +
+                "        .container { background-color: #fff; border-radius: 5px; padding: 20px; max-width: 600px; margin: auto; }" +
+                "        .header { background-color: #333; padding: 10px; color: #fff; text-align: center; border-top-left-radius: 5px; border-top-right-radius: 5px; }" +
+                "        .content { padding: 20px; font-size: 16px; line-height: 1.6; }" +
+                "        .button { display: inline-block; padding: 10px 20px; margin: 20px 0; background-color: #dc3545; color: #fff; text-decoration: none; border-radius: 5px; }" +
+                "        .footer { font-size: 12px; color: #777; text-align: center; margin-top: 20px; }" +
+                "    </style>" +
+                "</head>" +
+                "<body>" +
+                "    <div class=\"container\">" +
+                "        <div class=\"header\">" +
+                "            <h1>Ticotees Store</h1>" +
+                "        </div>" +
+                "        <div class=\"content\">" +
+                "            <p>Hola,</p>" +
+                "            <p>Recibimos una solicitud para restablecer la contraseña de tu cuenta en Ticotees Store.</p>" +
+                "            <p>Si realizaste esta solicitud, haz clic en el siguiente botón para reestablecer tu contraseña:</p>" +
+                "            <p style=\"text-align: center;\">" +
+                "                <a href=\"" + resetLink + "\" class=\"button\">Restablecer contraseña</a>" +
+                "            </p>" +
+                "            <p>Si el botón no funciona, copia y pega el siguiente enlace en tu navegador:</p>" +
+                "            <p><a href=\"" + resetLink + "\">" + resetLink + "</a></p>" +
+                "            <p>Si no solicitaste este cambio, ignora este correo.</p>" +
+                "        </div>" +
+                "        <div class=\"footer\">" +
+                "            <p>© 2025 Ticotees Store. Todos los derechos reservados.</p>" +
+                "        </div>" +
+                "    </div>" +
+                "</body>" +
+                "</html>";
+
+        sendEmail(to, subject, content);
+    }
+
+    public void sendPasswordChangedNotification(String to, String subject) {
+        String content = "<html>" +
+                "<head>" +
+                "    <style>" +
+                "        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }" +
+                "        .container { background-color: #fff; border-radius: 5px; padding: 20px; max-width: 600px; margin: auto; }" +
+                "        .header { background-color: #333; padding: 10px; color: #fff; text-align: center; border-top-left-radius: 5px; border-top-right-radius: 5px; }" +
+                "        .content { padding: 20px; font-size: 16px; line-height: 1.6; }" +
+                "        .button { display: inline-block; padding: 10px 20px; margin: 20px 0; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 5px; }" +
+                "        .footer { font-size: 12px; color: #777; text-align: center; margin-top: 20px; }" +
+                "    </style>" +
+                "</head>" +
+                "<body>" +
+                "    <div class=\"container\">" +
+                "        <div class=\"header\">" +
+                "            <h1>Ticotees Store</h1>" +
+                "        </div>" +
+                "        <div class=\"content\">" +
+                "            <p>Hola,</p>" +
+                "            <p>Te informamos que tu contraseña ha sido cambiada exitosamente.</p>" +
+                "            <p>Si tú no realizaste este cambio, por favor contacta de inmediato a nuestro equipo de soporte.</p>" +
+                "            <p>Para iniciar sesión, haz clic en el siguiente enlace:</p>" +
+                "            <p style=\"text-align: center;\">" +
+                "                <a href=\"http://localhost:8080/login\" class=\"button\">Iniciar Sesión</a>" +
+                "            </p>" +
+                "        </div>" +
+                "        <div class=\"footer\">" +
+                "            <p>© 2025 Ticotees Store. Todos los derechos reservados.</p>" +
+                "        </div>" +
+                "    </div>" +
+                "</body>" +
+                "</html>";
+
+        sendEmail(to, subject, content);
+    }
+
+
 
     /**
      * Envía un correo en formato HTML.

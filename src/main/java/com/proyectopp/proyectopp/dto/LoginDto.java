@@ -4,6 +4,7 @@ public class LoginDto {
 
     private String correoElectronico;
     private String password;
+    private String confirmarPassword;
 
 
     public String getCorreoElectronico() {
@@ -22,11 +23,20 @@ public class LoginDto {
         this.password = password;
     }
 
+    public String getConfirmarPassword() {
+        return confirmarPassword;
+    }
+
+    public void setConfirmarPassword(String confirmarPassword) {
+        this.confirmarPassword = confirmarPassword;
+    }
+
     @Override
     public String toString() {
         return "LoginDto{" +
                 "correoElectronico='" + correoElectronico + '\'' +
                 ", password='" + password + '\'' +
+                ", confirmarPassword='" + confirmarPassword + '\'' +
                 '}';
     }
 }
