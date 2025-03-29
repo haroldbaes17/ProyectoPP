@@ -16,22 +16,16 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("")
@@ -60,12 +54,10 @@ public class UsuarioController {
 
     @GetMapping("/mi-perfil")
     public String miPerfil(Model model, HttpSession session) {
-
         // 1) Obtenemos el usuario en sesión
         int idUsuario = Integer.parseInt(session.getAttribute("idUsuario").toString());
         Usuario usuario = repository.findById(idUsuario).orElse(null);
         if (usuario == null) {
-            // Manejo de error, por ejemplo redirigir o mostrar un mensaje
             return "redirect:/login";
         }
 
@@ -77,24 +69,18 @@ public class UsuarioController {
         usuarioDto.setCorreoElectronico(usuario.getCorreoElectronico());
         usuarioDto.setTelefono(usuario.getTelefono());
 
-        // 3) Calculamos la cantidad de productos en el carrito
-        List<DetallePedido> itemsCarrito = HomeController.detalles;  // Ejemplo tuyo
+        List<DetallePedido> itemsCarrito = HomeController.detalles;
         int cantidadCarrito = itemsCarrito.size();
 
-        // 4) Buscamos únicamente los pedidos del usuario actual
-        List<Pedido> pedidosUsuario = pedidoRepository.findByUsuarioId(usuario.getId());
-
-
-        // 8) Agregamos los datos al modelo
+        int cantidadPedidos = (int) pedidoRepository.countByUsuarioId(usuario.getId());
 
         model.addAttribute("direccionDto", new DireccionDto());
-        model.addAttribute("cantidadPedidos", pedidosUsuario.size());
+        model.addAttribute("cantidadPedidos", cantidadPedidos);
         model.addAttribute("usuarioDto", usuarioDto);
         model.addAttribute("cantidadCarrito", cantidadCarrito);
 
         return "usuario/profile";
     }
-
 
     @PostMapping("/actualizar-perfil")
     public String updateProfile(
@@ -119,55 +105,35 @@ public class UsuarioController {
     }
 
     @GetMapping("/historial")
-    public String historial(
-            Model model, HttpSession session
-    ) {
-
-        // 1) Obtenemos el usuario en sesión
+    public String historial(Model model, HttpSession session) {
         int idUsuario = Integer.parseInt(session.getAttribute("idUsuario").toString());
         Usuario usuario = repository.findById(idUsuario).orElse(null);
-
         if (usuario == null) {
-            // Manejo de error, por ejemplo redirigir o mostrar un mensaje
             return "redirect:/login";
         }
-        // 4) Buscamos únicamente los pedidos del usuario actual
-        List<Pedido> pedidosUsuario = pedidoRepository.findByUsuarioId(usuario.getId());
 
-        // 5) Obtenemos los IDs de los pedidos y buscamos solo los detalles correspondientes
-        List<Integer> pedidoIds = pedidosUsuario.stream()
-                .map(Pedido::getId)
+        // Se obtiene el historial, que ya estará precargado en el caché
+        List<PedidoDto> dtos = usuarioService.obtenerHistorialPedidos(usuario.getId());
+
+        // Se filtran los DTOs por estado
+        List<PedidoDto> pendientesDto = dtos.stream()
+                .filter(dto -> "Pendiente".equals(dto.getEstado()))
                 .collect(Collectors.toList());
-        List<DetallePedido> detallesPedidos = pedidoIds.isEmpty()
-                ? new ArrayList<>()
-                : detallePedidoRepository.findByPedidoIdIn(pedidoIds);
-
-        // 6) Separamos en pedidos pendientes y completados usando stream API
-        List<Pedido> pedidosPendientes = pedidosUsuario.stream()
-                .filter(p -> p.getEstado().equalsIgnoreCase("Pendiente"))
+        List<PedidoDto> enviadosDto = dtos.stream()
+                .filter(dto -> "Enviado".equals(dto.getEstado()))
                 .collect(Collectors.toList());
-
-        List<Pedido> pedidosEnviados = pedidosUsuario.stream()
-                .filter(p -> p.getEstado().equalsIgnoreCase("Enviado"))
+        List<PedidoDto> completadosDto = dtos.stream()
+                .filter(dto -> "Entregado".equals(dto.getEstado()))
                 .collect(Collectors.toList());
 
-        List<Pedido> pedidosCompletados = pedidosUsuario.stream()
-                .filter(p -> p.getEstado().equalsIgnoreCase("Entregado"))
-                .collect(Collectors.toList());
-
-        // 7) Convertimos cada Pedido a PedidoDto, asignándole los detalles correctos
-        List<PedidoDto> pedidosPendientesDto = usuarioService.construirPedidoDtos(pedidosPendientes, detallesPedidos);
-        List<PedidoDto> pedidosCompletadosDto = usuarioService.construirPedidoDtos(pedidosCompletados, detallesPedidos);
-        List<PedidoDto> pedidosEnviadosDto = usuarioService.construirPedidoDtos(pedidosEnviados, detallesPedidos);
-
-        // 8) Agregamos los datos al modelo
-        model.addAttribute("pedidosPendientes", pedidosPendientesDto);
-        model.addAttribute("pedidosEnviados", pedidosEnviadosDto);
-        model.addAttribute("pedidosCompletados", pedidosCompletadosDto);
-        model.addAttribute("cantidadPedidos", pedidosUsuario.size());
-
+        model.addAttribute("pedidosPendientes", pendientesDto);
+        model.addAttribute("pedidosEnviados", enviadosDto);
+        model.addAttribute("pedidosCompletados", completadosDto);
+        model.addAttribute("cantidadPedidos", dtos.size());
 
         return "usuario/historial";
     }
+
+
 
 }

@@ -8,6 +8,16 @@ import java.util.List;
 
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
+
+
+
+    // Obtiene todos los pedidos de un usuario
     List<Pedido> findByUsuarioId(Integer usuarioId);
+
+    // Obtiene los pedidos de un usuario filtrados por estado
+    List<Pedido> findByUsuarioIdAndEstado(Integer usuarioId, String estado);
+
+    long countByUsuarioId(int usuarioId);
+
 
 }
