@@ -30,10 +30,10 @@ public class Usuario {
     private String telefono;
 
     @Column(name = "es_admin", nullable = false)
-    private boolean es_admin;
+    private Boolean es_admin;
 
     @Column(name = "confirmado", nullable = false)
-    private boolean confirmado;
+    private Boolean confirmado;
 
     @Column(name = "token", length = 64, nullable = false)
     private String token;
@@ -94,19 +94,19 @@ public class Usuario {
         this.telefono = telefono;
     }
 
-    public boolean isEs_admin() {
+    public Boolean isEs_admin() {
         return es_admin;
     }
 
-    public void setEs_admin(boolean es_admin) {
+    public void setEs_admin(Boolean es_admin) {
         this.es_admin = es_admin;
     }
 
-    public boolean isConfirmado() {
+    public Boolean isConfirmado() {
         return confirmado;
     }
 
-    public void setConfirmado(boolean confirmado) {
+    public void setConfirmado(Boolean confirmado) {
         this.confirmado = confirmado;
     }
 

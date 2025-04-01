@@ -4,10 +4,7 @@ import com.proyectopp.proyectopp.controller.HomeController;
 import com.proyectopp.proyectopp.dto.DireccionDto;
 import com.proyectopp.proyectopp.dto.PedidoDto;
 import com.proyectopp.proyectopp.dto.UsuarioDto;
-import com.proyectopp.proyectopp.model.DetallePedido;
-import com.proyectopp.proyectopp.model.Direccion;
-import com.proyectopp.proyectopp.model.Pedido;
-import com.proyectopp.proyectopp.model.Usuario;
+import com.proyectopp.proyectopp.model.*;
 import com.proyectopp.proyectopp.repository.DetallePedidoRepository;
 import com.proyectopp.proyectopp.repository.DireccionRepository;
 import com.proyectopp.proyectopp.repository.PedidoRepository;
@@ -32,6 +29,9 @@ public class PedidoService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private FacturaService facturaService;
 
     public void guardarPedido(PedidoDto pedidoDto, DireccionDto direccionDto, UsuarioDto usuarioDto) {
         List<DetallePedido> detalles = HomeController.detalles;
@@ -72,6 +72,7 @@ public class PedidoService {
             detalleRepository.save(detallePedido);
         }
 
-        HomeController.detalles.clear();
+        facturaService.guardarFactura(pedido, usuario);
+
     }
 }

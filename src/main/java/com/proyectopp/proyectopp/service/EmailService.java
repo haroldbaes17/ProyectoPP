@@ -1,11 +1,19 @@
 package com.proyectopp.proyectopp.service;
 
+import com.proyectopp.proyectopp.model.DetallePedido;
+import com.proyectopp.proyectopp.model.Direccion;
+import com.proyectopp.proyectopp.model.Pedido;
+import com.proyectopp.proyectopp.model.Usuario;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.List;
 
 @Service
 public class EmailService {
@@ -128,6 +136,105 @@ public class EmailService {
                 "</body>" +
                 "</html>";
 
+        sendEmail(to, subject, content);
+    }
+
+    public void sendOrderConfirmationEmail(
+            String to,
+            String subject,
+            Pedido pedido,
+            Direccion direccion,
+            Usuario usuario,
+            List<DetallePedido> detalles
+    ) {
+        String nombreUsuario = usuario.getNombre() + usuario.getApellidos();
+        String fechaPedido = pedido.getFecha().toString();
+
+        // Formateadores para 2 decimales
+        DecimalFormat df = new DecimalFormat("#,##0.00");
+        String subtotalFormatted = df.format(pedido.getSubtotal());
+        String impuestosFormatted = df.format(pedido.getSubtotal().multiply(BigDecimal.valueOf(0.13)));
+        String totalFormatted = df.format(pedido.getTotal());
+
+        StringBuilder detallesTabla = new StringBuilder();
+        for (DetallePedido detalle : detalles) {
+
+            String precioUnitarioFormateado = df.format(detalle.getPrecioUnitario());
+            String subtotalDetalleFormateado = df.format(detalle.getSubtotal());
+
+            detallesTabla.append("<tr>")
+                    .append("<td>").append(detalle.getProducto().getNombre()).append("</td>")
+                    .append("<td>").append(detalle.getProducto().getEquipo()).append("</td>")
+                    .append("<td>").append(detalle.getProducto().getTipoEquipacion()).append("</td>")
+                    .append("<td>").append(detalle.getProducto().getLiga()).append("</td>")
+                    .append("<td>").append(detalle.getProducto().getTemporada()).append("</td>")
+                    .append("<td style=\"text-align:center;\">").append(detalle.getTalla()).append("</td>")
+                    .append("<td style=\"text-align:center;\">").append(detalle.getCantidad()).append("</td>")
+                    .append("<td>").append("₡").append(precioUnitarioFormateado).append("</td>")
+                    .append("<td>").append("₡").append(subtotalDetalleFormateado).append("</td>")
+                    .append("</tr>");
+        }
+
+        String content = "<html>" +
+                "<head>" +
+                "    <style>" +
+                "        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }" +
+                "        .container { background-color: #fff; border-radius: 5px; padding: 20px; max-width: 600px; margin: auto; }" +
+                "        .header { background-color: #333; padding: 10px; color: #fff; text-align: center; border-top-left-radius: 5px; border-top-right-radius: 5px; }" +
+                "        .content { padding: 20px; font-size: 16px; line-height: 1.6; }" +
+                "        .footer { font-size: 12px; color: #777; text-align: center; margin-top: 20px; }" +
+                "        .order-details { width: 100%; border-collapse: collapse; margin-top: 20px; }" +
+                "        .order-details th, .order-details td { border: 1px solid #ddd; padding: 8px; }" +
+                "        .order-details th { background-color: #f2f2f2; }" +
+                "        .total { text-align: left; margin-top: 20px; }" +
+                "    </style>" +
+                "</head>" +
+                "<body>" +
+                "    <div class=\"container\">" +
+                "        <div class=\"header\">" +
+                "            <h1>Ticotees Store</h1>" +
+                "        </div>" +
+                "        <div class=\"content\">" +
+                "            <p>Hola, " + nombreUsuario + ",</p>" +
+                "            <p>¡Gracias por tu compra! Tu pedido se ha procesado correctamente.</p>" +
+                "            <p><strong>Fecha de pedido:</strong> " + fechaPedido + "</p>" +
+                "            <h3>Detalles del Pedido</h3>" +
+                "            <table class=\"order-details\">" +
+                "                <thead>" +
+                "                    <tr>" +
+                "                        <th>Nombre</th>" +
+                "                        <th>Equipo</th>" +
+                "                        <th>Equipación</th>" +
+                "                        <th>Liga</th>" +
+                "                        <th>Temporada</th>" +
+                "                        <th>Talla</th>" +
+                "                        <th>Cantidad</th>" +
+                "                        <th>Precio Unit.</th>" +
+                "                        <th>Subtotal</th>" +
+                "                    </tr>" +
+                "                </thead>" +
+                "                <tbody>" +
+                detallesTabla.toString() +
+                "                </tbody>" +
+                "            </table>" +
+                "            <p class=\"total-left\"><strong>Subtotal:</strong> ₡" + subtotalFormatted + "</p>" +
+                "            <p class=\"total-left\"><strong>Impuestos:</strong> ₡" + impuestosFormatted + "</p>" +
+                "            <p class=\"total-left\"><strong>Total:</strong> ₡" + totalFormatted + "</p>" +
+                "            <h3>Dirección de Envío</h3>" +
+                "            <p>" + direccion.getProvincia() + "<br>" +
+                "                " + direccion.getCanton() + ", " + direccion.getDistrito() + "<br>" +
+                "                " + direccion.getDireccionExacta() + "<br>" +
+                "            <p>En caso de tener alguna duda o consulta sobre tu pedido, por favor contáctanos.</p>" +
+                "            <p>¡Gracias por comprar en Ticotees Store!</p>" +
+                "        </div>" +
+                "        <div class=\"footer\">" +
+                "            <p>© 2025 Ticotees Store. Todos los derechos reservados.</p>" +
+                "        </div>" +
+                "    </div>" +
+                "</body>" +
+                "</html>";
+
+        // Finalmente, envías el correo con tu método genérico
         sendEmail(to, subject, content);
     }
 

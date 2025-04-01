@@ -2,15 +2,12 @@ package com.proyectopp.proyectopp.controller;
 
 import com.proyectopp.proyectopp.dto.*;
 import com.proyectopp.proyectopp.model.DetallePedido;
-import com.proyectopp.proyectopp.model.Pedido;
 import com.proyectopp.proyectopp.model.Usuario;
 import com.proyectopp.proyectopp.repository.DetallePedidoRepository;
 import com.proyectopp.proyectopp.repository.PedidoRepository;
 import com.proyectopp.proyectopp.repository.UsuarioRepository;
 import com.proyectopp.proyectopp.service.EmailService;
 import com.proyectopp.proyectopp.service.UsuarioService;
-import com.proyectopp.proyectopp.utils.TokenGenerator;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -22,10 +19,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("")
@@ -134,6 +129,41 @@ public class UsuarioController {
         return "usuario/historial";
     }
 
+    @GetMapping("/admin/usuarios")
+    public String showUsers(
+            Model model
+    ) {
 
+        List<Usuario> usuarios = repository.findAll();
+        model.addAttribute("usuarios", usuarios);
+        return "admin/usuarios/show";
+    }
+
+    @GetMapping("/admin/usuarios/modificar")
+    public String modificarUsuario(
+            Model model,
+            @RequestParam int id
+    ) {
+        Usuario usuario = repository.findById(id).orElse(null);
+
+        if (usuario == null) {
+            return "redirect:/admin/usuarios";
+        }
+
+        UsuarioDto usuarioDto = new UsuarioDto();
+        usuarioDto.setId(usuario.getId());
+        usuarioDto.setNombre(usuario.getNombre());
+        usuarioDto.setApellidos(usuario.getApellidos());
+        usuarioDto.setCedula(usuario.getCedula());
+        usuarioDto.setCorreoElectronico(usuario.getCorreoElectronico());
+        usuarioDto.setPassword(usuario.getPassword());
+        usuarioDto.setTelefono(usuario.getTelefono());
+        usuarioDto.setEs_admin(usuario.isEs_admin());
+        usuarioDto.setConfirmado(usuario.isConfirmado());
+
+        model.addAttribute("usuarioDto", usuarioDto);
+        model.addAttribute("usuario", usuario);
+        return "admin/usuarios/edit";
+    }
 
 }
